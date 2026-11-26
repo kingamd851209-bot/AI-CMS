@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xinhongru.mapper.CheckRecordMapper">
+    <insert id="save">
+        insert into t_check_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="contentId!=null">content_id,</if>
+            <if test="contentTitle!=null">content_title,</if>
+            <if test="contentHistoryId!=null">content_history_id,</if>
+            <if test="submitMenuId!=null">submit_menu_id,</if>
+            <if test="submitMenuName!=null">submit_menu_name,</if>
+            <if test="submitUserId!=null">submit_user_id,</if>
+            <if test="submitUserName!=null">submit_user_name,</if>
+            <if test="submitDescription!=null">submit_description,</if>
+            <if test="submitTime!=null">submit_time,</if>
+            <if test="checkUserId!=null">check_user_id,</if>
+            <if test="checkUserName!=null">check_user_name,</if>
+            <if test="checkStatus!=null">check_status,</if>
+            <if test="checkDescription!=null">check_description,</if>
+            <if test="checkTime!=null">check_time,</if>
+            <if test="type!=null">type,</if>
+        </trim>
+        <trim prefix=" values (" suffix=")" suffixOverrides=",">
+            <if test="contentId!=null">#{contentId},</if>
+            <if test="contentTitle!=null">#{contentTitle},</if>
+            <if test="contentHistoryId!=null">#{contentHistoryId},</if>
+            <if test="submitMenuId!=null">#{submitMenuId},</if>
+            <if test="submitMenuName!=null">#{submitMenuName},</if>
+            <if test="submitUserId!=null">#{submitUserId},</if>
+            <if test="submitUserName!=null">#{submitUserName},</if>
+            <if test="submitDescription!=null">#{submitDescription},</if>
+            <if test="submitTime!=null">#{submitTime},</if>
+            <if test="checkUserId!=null">#{checkUserId},</if>
+            <if test="checkUserName!=null">#{checkUserName},</if>
+            <if test="checkStatus!=null">#{checkStatus},</if>
+            <if test="checkDescription!=null">#{checkDescription},</if>
+            <if test="checkTime!=null">#{checkTime},</if>
+            <if test="type!=null">#{type},</if>
+        </trim>
+    </insert>
+    <update id="updateById">
+        update t_check_record
+        <set>
+            <if test="contentId!=null">content_id=#{contentId},</if>
+            <if test="contentTitle!=null">content_title=#{contentTitle},</if>
+            <if test="contentHistoryId!=null">content_history_id=#{contentHistoryId},</if>
+            <if test="submitMenuId!=null">submit_menu_id=#{submitMenuId},</if>
+            <if test="submitMenuName!=null">submit_menu_name=#{submitMenuName},</if>
+            <if test="submitUserId!=null">submit_user_id=#{submitUserId},</if>
+            <if test="submitUserName!=null">submit_user_name=#{submitUserName},</if>
+            <if test="submitDescription!=null">submit_description=#{submitDescription},</if>
+            <if test="submitTime!=null">submit_time=#{submitTime},</if>
+            <if test="checkUserId!=null">check_user_id=#{checkUserId},</if>
+            <if test="checkUserName!=null">check_user_name=#{checkUserName},</if>
+            <if test="checkStatus!=null">check_status=#{checkStatus},</if>
+            <if test="checkDescription!=null">check_description=#{checkDescription},</if>
+            <if test="checkTime!=null">check_time=#{checkTime},</if>
+            <if test="type!=null">type=#{type},</if>
+        </set>
+        where id=#{id}
+    </update>
+    <update id="updateCheckStatus3">
+        update t_check_record
+        set check_status=3
+        where content_id = #{contentId}
+          and checkStatus = 0
+    </update>
+    <select id="getById" resultType="com.xinhongru.entity.CheckRecordEntity">
+        select *
+        from t_check_record
+        where id = #{id}
+    </select>
+    <select id="countByContentId" resultType="java.lang.Long">
+        select count(*)
+        from t_check_record
+        where content_id = #{contentId}
+          and check_status = 0
+    </select>
+    <select id="list" resultType="com.xinhongru.entity.CheckRecordEntity">
+        select * from t_check_record
+        where check_status=0
+        <if test="submitMenuIdList!=null and submitMenuIdList.size()>0">
+            <foreach collection="submitMenuIdList" open=" and submit_menu_id in (" close=")" separator="," item="id">
+                #{id}
+            </foreach>
+        </if>
+        <if test="title!=null">and content_title like concat('%',#{title},'%')</if>
+    </select>
+    <select id="listAuditRecords" resultType="com.xinhongru.entity.CheckRecordEntity">
+        select * from t_check_record
+        where 1=1
+        <if test="submitMenuIdList!=null and submitMenuIdList.size()>0">
+            <foreach collection="submitMenuIdList" open=" and submit_menu_id in (" close=")" separator="," item="id">
+                #{id}
+            </foreach>
+        </if>
+        <if test="title!=null">and content_title like concat('%',#{title},'%')</if>
+    </select>
+</mapper>

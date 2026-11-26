@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.xinhongru</groupId>
+        <artifactId>hongru-cms</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+    <artifactId>cms-boot</artifactId>
+    <name>CMS Boot</name>
+    <dependencies>
+        <dependency>
+            <groupId>com.xinhongru</groupId>
+            <artifactId>cms-contracts</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.xinhongru</groupId>
+            <artifactId>cms-security</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.xinhongru</groupId>
+            <artifactId>cms-ai</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.xinhongru</groupId>
+            <artifactId>cms-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.xinhongru</groupId>
+            <artifactId>cms-site</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.xinhongru</groupId>
+            <artifactId>cms-admin</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-webmvc</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-session-data-redis</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid-spring-boot-4-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.baizhukui</groupId>
+            <artifactId>knife4j-openapi3-boot4-spring-boot-starter</artifactId>
+        </dependency>
+    </dependencies>
+    <build>
+        <finalName>xhr-cms-1.0-SNAPSHOT</finalName>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <excludes>
+                    <!-- Management pages and static assets belong to the standalone admin-ui. -->
+                    <exclude>static/**</exclude>
+                    <exclude>templates/**</exclude>
+                </excludes>
+            </resource>
+        </resources>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <workingDirectory>${maven.multiModuleProjectDirectory}</workingDirectory>
+                    <excludes>
+                        <exclude>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                        </exclude>
+                        <exclude>
+                            <groupId>org.springframework.boot</groupId>
+                            <artifactId>spring-boot-configuration-processor</artifactId>
+                        </exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <forceCreation>true</forceCreation>
+                    <excludes>
+                        <exclude>static/**</exclude>
+                        <exclude>templates/**</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.spotify</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+                <version>${docker-maven-plugin.version}</version>
+                <configuration>
+                    <imageName>${docker.image.prefix}/${project.artifactId}</imageName>
+                    <dockerDirectory>src/main/docker</dockerDirectory>
+                    <resources>
+                        <resource>
+                            <targetPath>/</targetPath>
+                            <directory>${project.build.directory}</directory>
+                            <include>${project.build.finalName}.jar</include>
+                        </resource>
+                    </resources>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>3.1.0</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.apache.ant</groupId>
+                        <artifactId>ant-launcher</artifactId>
+                        <version>1.10.12</version>
+                    </dependency>
+                </dependencies>
+                <executions>
+                    <execution>
+                        <id>slim-playwright-driver-bundle</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <property name="fatJar" value="${project.build.directory}/${project.build.finalName}.jar" />
+                                <property name="workDir" value="${project.build.directory}/pwslim" />
+                                <delete dir="${workDir}" quiet="true" />
+                                <mkdir dir="${workDir}/fat" />
+                                <unzip src="${fatJar}" dest="${workDir}/fat">
+                                    <patternset>
+                                        <include name="BOOT-INF/lib/driver-bundle-*.jar" />
+                                    </patternset>
+                                </unzip>
+                                <pathconvert property="dbJarPath">
+                                    <fileset dir="${workDir}/fat/BOOT-INF/lib" includes="driver-bundle-*.jar" />
+                                </pathconvert>
+                                <basename property="dbJarName" file="${dbJarPath}" />
+                                <mkdir dir="${workDir}/update/BOOT-INF/lib" />
+                                <zip destfile="${workDir}/update/BOOT-INF/lib/${dbJarName}">
+                                    <zipfileset src="${dbJarPath}" excludes="driver/win32_x64/**,driver/mac/**,driver/mac-arm64/**,driver/linux-arm64/**" />
+                                </zip>
+                                <jar destfile="${fatJar}" update="true" compress="false" keepcompression="true">
+                                    <fileset dir="${workDir}/update" />
+                                </jar>
+                                <delete dir="${workDir}" quiet="true" />
+                                <echo level="info">driver-bundle 已精简为仅 Linux x64 平台</echo>
+                                <java jar="${fatJar}" fork="true" failonerror="true">
+                                    <jvmarg value="-Djarmode=tools" />
+                                    <arg value="list-layers" />
+                                </java>
+                            </target>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+    <profiles>
+        <profile>
+            <id>vendor-database-drivers</id>
+            <dependencies>
+                <!-- Optional deployment drivers; default dev/test/uat/prod profiles all use MySQL. -->
+                <dependency>
+                    <groupId>com.dameng</groupId>
+                    <artifactId>DmJdbcDriver18</artifactId>
+                </dependency>
+                <dependency>
+                    <groupId>com.dameng</groupId>
+                    <artifactId>DmDialect-for-hibernate6.5</artifactId>
+                </dependency>
+                <dependency>
+                    <groupId>com.huaweicloud.dws</groupId>
+                    <artifactId>huaweicloud-dws-jdbc</artifactId>
+                </dependency>
+            </dependencies>
+        </profile>
+    </profiles>
+</project>

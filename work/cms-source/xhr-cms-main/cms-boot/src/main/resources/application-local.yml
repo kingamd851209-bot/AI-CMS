@@ -1,0 +1,16 @@
+# CMS 基础环境；凭据由外部 Spring 配置文件提供。
+spring:
+  datasource:
+    druid:
+      url: jdbc:mysql://127.0.0.1:3306/cms?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+      username: cms
+      password: ''
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 6379
+      database: 0
+  session:
+    data:
+      redis:
+        namespace: cms:local

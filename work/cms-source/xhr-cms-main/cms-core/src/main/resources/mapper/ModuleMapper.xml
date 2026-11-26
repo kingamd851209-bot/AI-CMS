@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xinhongru.mapper.ModuleMapper">
+    <insert id="add" useGeneratedKeys="true" keyProperty="id">
+        <selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+            <!--MySql 写法-->
+            SELECT LAST_INSERT_ID()
+            <!--达梦写法-->
+            /*SELECT @@IDENTITY*/
+        </selectKey>
+        insert into t_module
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="title!=null">
+                title,
+            </if>
+            <if test="photo!=null">
+                photo,
+            </if>
+            <if test="note!=null">
+                note,
+            </if>
+            <if test="menuIds!=null">
+                menu_ids,
+            </if>
+            <if test="isChildren!=null">
+                is_children,
+            </if>
+            <if test="canAddMenuIds!=null">
+                can_add_menu_ids,
+            </if>
+            <if test="createTime!=null">
+                create_time,
+            </if>
+            <if test="sort!=null">
+                sort,
+            </if>
+            <if test="status!=null">
+                status,
+            </if>
+            <if test="deleted!=null">
+                deleted,
+            </if>
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="title!=null">
+                #{title},
+            </if>
+            <if test="photo!=null">
+                #{photo},
+            </if>
+            <if test="note!=null">
+                #{note},
+            </if>
+            <if test="menuIds!=null">
+                #{menuIds},
+            </if>
+            <if test="isChildren!=null">
+                #{isChildren},
+            </if>
+            <if test="canAddMenuIds!=null">
+                #{canAddMenuIds},
+            </if>
+            <if test="createTime!=null">
+                #{createTime},
+            </if>
+            <if test="sort!=null">
+                #{sort},
+            </if>
+            <if test="status!=null">
+                #{status},
+            </if>
+            <if test="deleted!=null">
+                #{deleted},
+            </if>
+        </trim>
+    </insert>
+
+
+    <update id="edit">
+        update t_module
+        <set>
+            <if test="title!=null">
+                title=#{title},
+            </if>
+            <if test="photo!=null">
+                photo=#{photo},
+            </if>
+            <if test="note!=null">
+                note=#{note},
+            </if>
+            <if test="menuIds!=null">
+                menu_ids=#{menuIds},
+            </if>
+            <if test="isChildren!=null">
+                is_children=#{isChildren},
+            </if>
+            <if test="canAddMenuIds!=null">
+                can_add_menu_ids=#{canAddMenuIds},
+            </if>
+            <if test="createTime!=null">
+                create_time=#{createTime},
+            </if>
+            <if test="sort!=null">
+                sort=#{sort},
+            </if>
+            <if test="status!=null">
+                status=#{status},
+            </if>
+            <if test="deleted!=null">
+                deleted=#{deleted},
+            </if>
+        </set>
+        <where>
+            <if test="id!=null">
+                id=#{id} and  deleted=0
+            </if>
+        </where>
+    </update>
+    <update id="updateSort">
+        update t_module
+        <set>
+            <if test="sort!=null">
+                sort=#{sort}
+            </if>
+        </set>
+        <where>
+            id=#{id} and deleted=0
+        </where>
+    </update>
+    <update id="updateTitle">
+        update t_module
+        <set>
+            <if test="title!=null">
+                title=#{title}
+            </if>
+        </set>
+        <where>
+            id=#{id} and deleted=0
+        </where>
+    </update>
+    <update id="updateIsDeleted">
+        update t_module set
+        deleted=1
+        <where>
+            id=#{id} and deleted=0
+        </where>
+    </update>
+    <delete id="delete">
+        update t_module set deleted=0 where id in
+        <foreach collection="ids" item="id" index="index" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </delete>
+    <select id="getAllList" resultType="com.xinhongru.entity.ModuleEntity">
+        select * from t_module where deleted=0 order by sort desc,id desc
+    </select>
+    <select id="getModuleEntityById" resultType="com.xinhongru.entity.ModuleEntity">
+        select * from t_module where id=#{id} and deleted=0
+    </select>
+</mapper>

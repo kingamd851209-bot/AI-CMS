@@ -1,0 +1,1508 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xinhongru.web.mapper.InfoMapper">
+    <sql id="orderCommon">
+        and status = 1
+        and deleted = 0
+        order by sort
+        desc, create_time desc, id desc
+    </sql>
+    <sql id="fieldCommon">
+        <include refid="fieldSummary"/>,
+        content1, content2, content3, content4, content5, content6
+    </sql>
+    <sql id="fieldSummary">
+        extension_fields,
+        id,
+        class_id,
+        content_code,
+        title,
+        tags,
+        hits,
+        sort,
+        status,
+        single_line1,
+        single_line2,
+        single_line3,
+        single_line4,
+        single_line5,
+        single_line6,
+        single_line7,
+        single_line8,
+        single_line9,
+        single_line10,
+        single_line11,
+        single_line12,
+        single_line13,
+        single_line14,
+        single_line15,
+        single_line16,
+        single_line17,
+        single_line18,
+        single_line19,
+        single_line20,
+        xgid,
+        note1,
+        note2,
+        note3,
+        note4,
+        note5,
+        note6,
+        note7,
+        note8,
+        note9,
+        note10,
+        note11,
+        note12,
+        note13,
+        note14,
+        note15,
+        photo1,
+        photo2,
+        photo3,
+        photo4,
+        photo5,
+        photo6,
+        photo7,
+        photo8,
+        photo9,
+        photo10,
+        photo11,
+        photo12,
+        photo13,
+        photo14,
+        photo15,
+        seo_title,
+        seo_keywords,
+        seo_description,
+        media1,
+        media2,
+        media3,
+        media4,
+        file1,
+        file2,
+        file3,
+        file4,
+        index_top,
+        index_elite,
+        index_hot,
+        menu_top,
+        menu_elite,
+        menu_hot,
+        channel_top,
+        channel_elite,
+        channel_hot,
+        nav_elite,
+        right_elite,
+        left_elite,
+        deleted,
+        create_time,
+        begin_time,
+        end_time,
+        create_user,
+        delete_user,
+        delete_time
+    </sql>
+
+    <sql id="fieldCommonJoin">
+         t0.id,
+         t0.class_id,
+         t0.title,
+         t0.tags,
+         t0.hits,
+         t0.sort,
+         t0.status,
+         t0.single_line1,
+         t0.single_line2,
+         t0.single_line3,
+         t0.single_line4,
+         t0.single_line5,
+         t0.xgid,
+         t0.note1,
+         t0.note2,
+         t0.note3,
+         t0.note4,
+         t0.note5,
+         t0.photo1,
+         t0.photo2,
+         t0.photo3,
+         t0.photo4,
+         t0.photo5,
+         t0.seo_title,
+         t0.seo_keywords,
+         t0.seo_description,
+         t0.media1,
+         t0.media2,
+         t0.media3,
+         t0.media4,
+         t0.file1,
+
+         t0.index_elite,
+         t0.menu_elite,
+         t0.menu_hot,
+         t0.create_time,
+         t1.detail_page_url
+
+    </sql>
+
+    <sql id="settingCommon">
+        <if test="setting==8">
+            and index_top=1
+        </if>
+        <if test="setting==9">
+            and index_hot=1
+        </if>
+        <if test="setting==10">
+            and index_elite=1
+        </if>
+        <if test="setting==11">
+            and channel_top=1
+        </if>
+        <if test="setting==12">
+            and channel_hot=1
+        </if>
+        <if test="setting==13">
+            and channel_elite=1
+        </if>
+        <if test="setting==14">
+            and menu_top=1
+        </if>
+        <if test="setting==15">
+            and menu_hot=1
+        </if>
+        <if test="setting==16">
+            and menu_elite=1
+        </if>
+        <if test="setting==17">
+            and nav_elite=1
+        </if>
+        <if test="setting==18">
+            and right_elite=1
+        </if>
+        <if test="setting==19">
+            and left_elite=1
+        </if>
+    </sql>
+    <sql id="validityPeriod">
+        and entry_into_force_time &lt;= now()
+        and expiration_time &gt;= now()
+    </sql>
+    <sql id="whereCommon">
+        and deleted=0 and status=1
+    </sql>
+    <insert id="add">
+        insert into t_contents
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="title!=null">
+                title,
+            </if>
+            <if test="createTime!=null">
+                create_time,
+            </if>
+            <if test="beginTime!=null">
+                begin_time,
+            </if>
+            <if test="endTime!=null">
+                end_time,
+            </if>
+            <if test="content1!=null">
+                content1,
+            </if>
+            <if test="content2!=null">
+                content2,
+            </if>
+            <if test="content3!=null">
+                content3,
+            </if>
+            <if test="content4!=null">
+                content4,
+            </if>
+            <if test="content5!=null">
+                content5,
+            </if>
+            <if test="content6!=null">
+                content6,
+            </if>
+            <if test="tags!=null">
+                tags,
+            </if>
+            <if test="classId!=null">
+                class_id,
+            </if>
+            <if test="status!=null">
+                status,
+            </if>
+            <if test="siteProjectId!=null">
+                site_project_id,
+            </if>
+            <if test="singleLine1!=null">
+                single_line1,
+            </if>
+            <if test="singleLine2!=null">
+                single_line2,
+            </if>
+            <if test="singleLine3!=null">
+                single_line3,
+            </if>
+            <if test="singleLine4!=null">
+                single_line4,
+            </if>
+            <if test="singleLine5!=null">
+                single_line5,
+            </if>
+            <if test="singleLine6!=null">
+                single_line6,
+            </if>
+            <if test="singleLine7!=null">
+                single_line7,
+            </if>
+            <if test="singleLine8!=null">
+                single_line8,
+            </if>
+            <if test="singleLine9!=null">
+                single_line9,
+            </if>
+            <if test="singleLine10!=null">
+                single_line10,
+            </if>
+            <if test="singleLine11!=null">
+                single_line11,
+            </if>
+            <if test="singleLine12!=null">
+                single_line12,
+            </if>
+            <if test="singleLine13!=null">
+                single_line13,
+            </if>
+            <if test="singleLine14!=null">
+                single_line14,
+            </if>
+            <if test="singleLine15!=null">
+                single_line15,
+            </if>
+            <if test="singleLine16!=null">
+                single_line16,
+            </if>
+            <if test="singleLine17!=null">
+                single_line17,
+            </if>
+            <if test="singleLine18!=null">
+                single_line18,
+            </if>
+            <if test="singleLine19!=null">
+                single_line19,
+            </if>
+            <if test="singleLine20!=null">
+                single_line20,
+            </if>
+            <if test="xgid!=null">
+                xgid,
+            </if>
+            <if test="note1!=null">
+                note1,
+            </if>
+            <if test="note2!=null">
+                note2,
+            </if>
+            <if test="note3!=null">
+                note3,
+            </if>
+            <if test="note4!=null">
+                note4,
+            </if>
+            <if test="note5!=null">
+                note5,
+            </if>
+            <if test="note6!=null">
+                note6,
+            </if>
+            <if test="note7!=null">
+                note7,
+            </if>
+            <if test="note8!=null">
+                note8,
+            </if>
+            <if test="note9!=null">
+                note9,
+            </if>
+            <if test="note10!=null">
+                note10,
+            </if>
+            <if test="note11!=null">
+                note11,
+            </if>
+            <if test="note12!=null">
+                note12,
+            </if>
+            <if test="note13!=null">
+                note13,
+            </if>
+            <if test="note14!=null">
+                note14,
+            </if>
+            <if test="note15!=null">
+                note15,
+            </if>
+            <if test="photo1!=null">
+                photo1,
+            </if>
+            <if test="photo2!=null">
+                photo2,
+            </if>
+            <if test="photo3!=null">
+                photo3,
+            </if>
+            <if test="photo4!=null">
+                photo4,
+            </if>
+            <if test="photo5!=null">
+                photo5,
+            </if>
+            <if test="photo6!=null">
+                photo6,
+            </if>
+            <if test="photo7!=null">
+                photo7,
+            </if>
+            <if test="photo8!=null">
+                photo8,
+            </if>
+            <if test="photo9!=null">
+                photo9,
+            </if>
+            <if test="photo10!=null">
+                photo10,
+            </if>
+            <if test="photo11!=null">
+                photo11,
+            </if>
+            <if test="photo12!=null">
+                photo12,
+            </if>
+            <if test="photo13!=null">
+                photo13,
+            </if>
+            <if test="photo14!=null">
+                photo14,
+            </if>
+            <if test="photo15!=null">
+                photo15,
+            </if>
+            <if test="media1!=null">
+                media1,
+            </if>
+            <if test="media2!=null">
+                media2,
+            </if>
+            <if test="media3!=null">
+                media3,
+            </if>
+            <if test="media4!=null">
+                media4,
+            </if>
+            <if test="file1!=null">
+                file1,
+            </if>
+            <if test="file2!=null">
+                file2,
+            </if>
+            <if test="file3!=null">
+                file3,
+            </if>
+            <if test="file4!=null">
+                file4,
+            </if>
+        </trim>
+        <trim prefix=" values (" suffix=")" suffixOverrides=",">
+            <if test="title!=null">
+                #{title},
+            </if>
+            <if test="createTime!=null">
+                #{createTime},
+            </if>
+            <if test="beginTime!=null">
+                #{beginTime},
+            </if>
+            <if test="endTime!=null">
+                #{endTime},
+            </if>
+            <if test="content1!=null">
+                #{content1},
+            </if>
+            <if test="content2!=null">
+                #{content2},
+            </if>
+            <if test="content3!=null">
+                #{content3},
+            </if>
+            <if test="content4!=null">
+                #{content4},
+            </if>
+            <if test="content5!=null">
+                #{content5},
+            </if>
+            <if test="content6!=null">
+                #{content6},
+            </if>
+            <if test="tags!=null">
+                #{tags},
+            </if>
+            <if test="classId!=null">
+                #{classId},
+            </if>
+            <if test="status!=null">
+                #{status},
+            </if>
+            <if test="siteProjectId!=null">
+                #{siteProjectId},
+            </if>
+            <if test="singleLine1!=null">
+                #{singleLine1},
+            </if>
+            <if test="singleLine2!=null">
+                #{singleLine2},
+            </if>
+            <if test="singleLine3!=null">
+                #{singleLine3},
+            </if>
+            <if test="singleLine4!=null">
+                #{singleLine4},
+            </if>
+            <if test="singleLine5!=null">
+                #{singleLine5},
+            </if>
+            <if test="singleLine6!=null">
+                #{singleLine6},
+            </if>
+            <if test="singleLine7!=null">
+                #{singleLine7},
+            </if>
+            <if test="singleLine8!=null">
+                #{singleLine8},
+            </if>
+            <if test="singleLine9!=null">
+                #{singleLine9},
+            </if>
+            <if test="singleLine10!=null">
+                #{singleLine10},
+            </if>
+            <if test="singleLine11!=null">
+                #{singleLine11},
+            </if>
+            <if test="singleLine12!=null">
+                #{singleLine12},
+            </if>
+            <if test="singleLine13!=null">
+                #{singleLine13},
+            </if>
+            <if test="singleLine14!=null">
+                #{singleLine14},
+            </if>
+            <if test="singleLine15!=null">
+                #{singleLine15},
+            </if>
+            <if test="singleLine16!=null">
+                #{singleLine16},
+            </if>
+            <if test="singleLine17!=null">
+                #{singleLine17},
+            </if>
+            <if test="singleLine18!=null">
+                #{singleLine18},
+            </if>
+            <if test="singleLine19!=null">
+                #{singleLine19},
+            </if>
+            <if test="singleLine20!=null">
+                #{singleLine20},
+            </if>
+            <if test="xgid!=null">
+                #{xgid},
+            </if>
+            <if test="note1!=null">
+                #{note1},
+            </if>
+            <if test="note2!=null">
+                #{note2},
+            </if>
+            <if test="note3!=null">
+                #{note3},
+            </if>
+            <if test="note4!=null">
+                #{note4},
+            </if>
+            <if test="note5!=null">
+                #{note5},
+            </if>
+            <if test="note6!=null">
+                #{note6},
+            </if>
+            <if test="note7!=null">
+                #{note7},
+            </if>
+            <if test="note8!=null">
+                #{note8},
+            </if>
+            <if test="note9!=null">
+                #{note9},
+            </if>
+            <if test="note10!=null">
+                #{note10},
+            </if>
+            <if test="note11!=null">
+                #{note11},
+            </if>
+            <if test="note12!=null">
+                #{note12},
+            </if>
+            <if test="note13!=null">
+                #{note13},
+            </if>
+            <if test="note14!=null">
+                #{note14},
+            </if>
+            <if test="note15!=null">
+                #{note15},
+            </if>
+            <if test="photo1!=null">
+                #{photo1},
+            </if>
+            <if test="photo2!=null">
+                #{photo2},
+            </if>
+            <if test="photo3!=null">
+                #{photo3},
+            </if>
+            <if test="photo4!=null">
+                #{photo4},
+            </if>
+            <if test="photo5!=null">
+                #{photo5},
+            </if>
+            <if test="photo6!=null">
+                #{photo6},
+            </if>
+            <if test="photo7!=null">
+                #{photo7},
+            </if>
+            <if test="photo8!=null">
+                #{photo8},
+            </if>
+            <if test="photo9!=null">
+                #{photo9},
+            </if>
+            <if test="photo10!=null">
+                #{photo10},
+            </if>
+            <if test="photo11!=null">
+                #{photo11},
+            </if>
+            <if test="photo12!=null">
+                #{photo12},
+            </if>
+            <if test="photo13!=null">
+                #{photo13},
+            </if>
+            <if test="photo14!=null">
+                #{photo14},
+            </if>
+            <if test="photo15!=null">
+                #{photo15},
+            </if>
+            <if test="media1!=null">
+                #{media1},
+            </if>
+            <if test="media2!=null">
+                #{media2},
+            </if>
+            <if test="media3!=null">
+                #{media3},
+            </if>
+            <if test="media4!=null">
+                #{media4},
+            </if>
+            <if test="file1!=null">
+                #{file1},
+            </if>
+            <if test="file2!=null">
+                #{file2},
+            </if>
+            <if test="file3!=null">
+                #{file3},
+            </if>
+            <if test="file4!=null">
+                #{file4},
+            </if>
+        </trim>
+    </insert>
+    <insert id="addArticle">
+        INSERT INTO
+        t_contents
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="title!=null">title,</if>
+            <if test="classid!=null">class_id,</if>
+            <if test="xgid!=null">xgid,</if>
+            <if test="createTime!=null">create_time,</if>
+            <if test="beginTime!=null">begin_time,</if>
+            <if test="endTime!=null">end_time,</if>
+            <if test="entryIntoForceTime!=null">entry_into_force_time,</if>
+            <if test="expirationTime!=null">expiration_time,</if>
+            <if test="status!=null">status,</if>
+            <if test="tags!=null">tags,</if>
+            <if test="hits!=null">hits,</if>
+            <if test="sort!=null">sort,</if>
+            <if test="indexTop!=null">index_top,</if>
+            <if test="indexElite!=null">index_elite,</if>
+            <if test="indexHot!=null">index_hot,</if>
+            <if test="menuTop!=null">menu_top,</if>
+            <if test="menuElite!=null">menu_elite,</if>
+            <if test="menuHot!=null">menu_hot,</if>
+            <if test="channelTop!=null">channel_top,</if>
+            <if test="channelElite!=null">channel_elite,</if>
+            <if test="channelHot!=null">channel_hot,</if>
+            <if test="navElite!=null">nav_elite,</if>
+            <if test="rightElite!=null">right_elite,</if>
+            <if test="leftElite!=null">left_elite,</if>
+            <if test="singleLine1!=null">single_line1,</if>
+            <if test="singleLine2!=null">single_line2,</if>
+            <if test="singleLine3!=null">single_line3,</if>
+            <if test="singleLine4!=null">single_line4,</if>
+            <if test="singleLine5!=null">single_line5,</if>
+            <if test="singleLine6!=null">single_line6,</if>
+            <if test="singleLine7!=null">single_line7,</if>
+            <if test="singleLine8!=null">single_line8,</if>
+            <if test="singleLine9!=null">single_line9,</if>
+            <if test="singleLine10!=null">single_line10,</if>
+            <if test="singleLine11!=null">single_line11,</if>
+            <if test="singleLine12!=null">single_line12,</if>
+            <if test="singleLine13!=null">single_line13,</if>
+            <if test="singleLine14!=null">single_line14,</if>
+            <if test="singleLine15!=null">single_line15,</if>
+            <if test="singleLine16!=null">single_line16,</if>
+            <if test="singleLine17!=null">single_line17,</if>
+            <if test="singleLine18!=null">single_line18,</if>
+            <if test="singleLine19!=null">single_line19,</if>
+            <if test="singleLine20!=null">single_line20,</if>
+            <if test="note1!=null">note1,</if>
+            <if test="note2!=null">note2,</if>
+            <if test="note3!=null">note3,</if>
+            <if test="note4!=null">note4,</if>
+            <if test="note5!=null">note5,</if>
+            <if test="note6!=null">note6,</if>
+            <if test="note7!=null">note7,</if>
+            <if test="note8!=null">note8,</if>
+            <if test="note9!=null">note9,</if>
+            <if test="note10!=null">note10,</if>
+            <if test="note11!=null">note11,</if>
+            <if test="note12!=null">note12,</if>
+            <if test="note13!=null">note13,</if>
+            <if test="note14!=null">note14,</if>
+            <if test="note15!=null">note15,</if>
+            <if test="photo1!=null">photo1,</if>
+            <if test="photo2!=null">photo2,</if>
+            <if test="photo3!=null">photo3,</if>
+            <if test="photo4!=null">photo4,</if>
+            <if test="photo5!=null">photo5,</if>
+            <if test="photo6!=null">photo6,</if>
+            <if test="photo7!=null">photo7,</if>
+            <if test="photo8!=null">photo8,</if>
+            <if test="photo9!=null">photo9,</if>
+            <if test="photo10!=null">photo10,</if>
+            <if test="photo11!=null">photo11,</if>
+            <if test="photo12!=null">photo12,</if>
+            <if test="photo13!=null">photo13,</if>
+            <if test="photo14!=null">photo14,</if>
+            <if test="photo15!=null">photo15,</if>
+            <if test="seoTitle!=null">seo_title,</if>
+            <if test="seoKeywords!=null">seo_keywords,</if>
+            <if test="seoDescription!=null">seo_description,</if>
+            <if test="media1!=null">media1,</if>
+            <if test="media2!=null">media2,</if>
+            <if test="media3!=null">media3,</if>
+            <if test="media4!=null">media4,</if>
+            <if test="file1!=null">file1,</if>
+            <if test="file2!=null">file2,</if>
+            <if test="file3!=null">file3,</if>
+            <if test="file4!=null">file4,</if>
+            <if test="content1!=null">content1,</if>
+            <if test="content2!=null">content2,</if>
+            <if test="content3!=null">content3,</if>
+            <if test="content4!=null">content4,</if>
+            <if test="content5!=null">content5,</if>
+            <if test="content6!=null">content6,</if>
+        </trim>
+        <trim prefix="VALUES(" suffix=")" suffixOverrides=",">
+            <if test="title!=null">#{title},</if>
+            <if test="classid!=null">#{classid},</if>
+            <if test="xgid!=null">#{xgid},</if>
+            <if test="createTime!=null">#{createTime},</if>
+            <if test="beginTime!=null">#{beginTime},</if>
+            <if test="endTime!=null">#{endTime},</if>
+            <if test="entryIntoForceTime!=null">#{entryIntoForceTime},</if>
+            <if test="expirationTime!=null">#{expirationTime},</if>
+            <if test="status!=null">#{status},</if>
+            <if test="tags!=null">#{tags},</if>
+            <if test="hits!=null">#{hits},</if>
+            <if test="sort!=null">#{sort},</if>
+            <if test="indexTop!=null">#{indexTop},</if>
+            <if test="indexElite!=null">#{indexElite},</if>
+            <if test="indexHot!=null">#{indexHot},</if>
+            <if test="menuTop!=null">#{menuTop},</if>
+            <if test="menuElite!=null">#{menuElite},</if>
+            <if test="menuHot!=null">#{menuHot},</if>
+            <if test="channelTop!=null">#{channelTop},</if>
+            <if test="channelElite!=null">#{channelElite},</if>
+            <if test="channelHot!=null">#{channelHot},</if>
+            <if test="navElite!=null">#{navElite},</if>
+            <if test="rightElite!=null">#{rightElite},</if>
+            <if test="leftElite!=null">#{leftElite},</if>
+            <if test="singleLine1!=null">#{singleLine1},</if>
+            <if test="singleLine2!=null">#{singleLine2},</if>
+            <if test="singleLine3!=null">#{singleLine3},</if>
+            <if test="singleLine4!=null">#{singleLine4},</if>
+            <if test="singleLine5!=null">#{singleLine5},</if>
+            <if test="singleLine6!=null">#{singleLine6},</if>
+            <if test="singleLine7!=null">#{singleLine7},</if>
+            <if test="singleLine8!=null">#{singleLine8},</if>
+            <if test="singleLine9!=null">#{singleLine9},</if>
+            <if test="singleLine10!=null">#{singleLine10},</if>
+            <if test="singleLine11!=null">#{singleLine11},</if>
+            <if test="singleLine12!=null">#{singleLine12},</if>
+            <if test="singleLine13!=null">#{singleLine13},</if>
+            <if test="singleLine14!=null">#{singleLine14},</if>
+            <if test="singleLine15!=null">#{singleLine15},</if>
+            <if test="singleLine16!=null">#{singleLine16},</if>
+            <if test="singleLine17!=null">#{singleLine17},</if>
+            <if test="singleLine18!=null">#{singleLine18},</if>
+            <if test="singleLine19!=null">#{singleLine19},</if>
+            <if test="singleLine20!=null">#{singleLine20},</if>
+            <if test="note1!=null">#{note1},</if>
+            <if test="note2!=null">#{note2},</if>
+            <if test="note3!=null">#{note3},</if>
+            <if test="note4!=null">#{note4},</if>
+            <if test="note5!=null">#{note5},</if>
+            <if test="note6!=null">#{note6},</if>
+            <if test="note7!=null">#{note7},</if>
+            <if test="note8!=null">#{note8},</if>
+            <if test="note9!=null">#{note9},</if>
+            <if test="note10!=null">#{note10},</if>
+            <if test="note11!=null">#{note11},</if>
+            <if test="note12!=null">#{note12},</if>
+            <if test="note13!=null">#{note13},</if>
+            <if test="note14!=null">#{note14},</if>
+            <if test="note15!=null">#{note15},</if>
+            <if test="photo1!=null">#{photo1},</if>
+            <if test="photo2!=null">#{photo2},</if>
+            <if test="photo3!=null">#{photo3},</if>
+            <if test="photo4!=null">#{photo4},</if>
+            <if test="photo5!=null">#{photo5},</if>
+            <if test="photo6!=null">#{photo6},</if>
+            <if test="photo7!=null">#{photo7},</if>
+            <if test="photo8!=null">#{photo8},</if>
+            <if test="photo9!=null">#{photo9},</if>
+            <if test="photo10!=null">#{photo10},</if>
+            <if test="photo11!=null">#{photo11},</if>
+            <if test="photo12!=null">#{photo12},</if>
+            <if test="photo13!=null">#{photo13},</if>
+            <if test="photo14!=null">#{photo14},</if>
+            <if test="photo15!=null">#{photo15},</if>
+            <if test="seoTitle!=null">#{seoTitle},</if>
+            <if test="seoKeywords!=null">#{seoKeywords},</if>
+            <if test="seoDescription!=null">#{seoDescription},</if>
+            <if test="media1!=null">#{media1},</if>
+            <if test="media2!=null">#{media2},</if>
+            <if test="media3!=null">#{media3},</if>
+            <if test="media4!=null">#{media4},</if>
+            <if test="file1!=null">#{file1},</if>
+            <if test="file2!=null">#{file2},</if>
+            <if test="file3!=null">#{file3},</if>
+            <if test="file4!=null">#{file4},</if>
+            <if test="content1!=null">#{content1},</if>
+            <if test="content2!=null">#{content2},</if>
+            <if test="content3!=null">#{content3},</if>
+            <if test="content4!=null">#{content4},</if>
+            <if test="content5!=null">#{content5},</if>
+            <if test="content6!=null">#{content6},</if>
+        </trim>
+    </insert>
+    <update id="updateHits">
+        update t_contents
+        set hits=hits + 1
+        where id = #{id}
+          and class_id = #{classid}
+          and status = 1
+          and deleted = 0;
+    </update>
+
+    <update id="updateArticle">
+        UPDATE
+        t_contents
+        <set>
+            <if test="title != null">title = #{title},</if>
+            <if test="classid != null">class_id = #{classid},</if>
+            <if test="xgid != null">xgid = #{xgid},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="beginTime != null">begin_time = #{beginTime},</if>
+            <if test="endTime != null">end_time = #{endTime},</if>
+            <if test="entryIntoForceTime != null">entry_into_force_time = #{entryIntoForceTime},</if>
+            <if test="expirationTime != null">expiration_time = #{expirationTime},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="tags != null">tags = #{tags},</if>
+            <if test="hits != null">hits = #{hits},</if>
+            <if test="sort != null">sort = #{sort},</if>
+            <if test="indexTop != null">index_top = #{indexTop},</if>
+            <if test="indexElite != null">index_elite = #{indexElite},</if>
+            <if test="indexHot != null">index_hot = #{indexHot},</if>
+            <if test="menuTop != null">menu_top = #{menuTop},</if>
+            <if test="menuElite != null">menu_elite = #{menuElite},</if>
+            <if test="menuHot != null">menu_hot = #{menuHot},</if>
+            <if test="channelTop != null">channel_top = #{channelTop},</if>
+            <if test="channelElite != null">channel_elite = #{channelElite},</if>
+            <if test="channelHot != null">channel_hot = #{channelHot},</if>
+            <if test="navElite != null">nav_elite = #{navElite},</if>
+            <if test="rightElite != null">right_elite = #{rightElite},</if>
+            <if test="leftElite != null">left_elite = #{leftElite},</if>
+            <if test="singleLine1 != null">single_line1 = #{singleLine1},</if>
+            <if test="singleLine2 != null">single_line2 = #{singleLine2},</if>
+            <if test="singleLine3 != null">single_line3 = #{singleLine3},</if>
+            <if test="singleLine4 != null">single_line4 = #{singleLine4},</if>
+            <if test="singleLine5 != null">single_line5 = #{singleLine5},</if>
+            <if test="singleLine6 != null">single_line6 = #{singleLine6},</if>
+            <if test="singleLine7 != null">single_line7 = #{singleLine7},</if>
+            <if test="singleLine8 != null">single_line8 = #{singleLine8},</if>
+            <if test="singleLine9 != null">single_line9 = #{singleLine9},</if>
+            <if test="singleLine10 != null">single_line10 = #{singleLine10},</if>
+            <if test="singleLine11 != null">single_line11 = #{singleLine11},</if>
+            <if test="singleLine12 != null">single_line12 = #{singleLine12},</if>
+            <if test="singleLine13 != null">single_line13 = #{singleLine13},</if>
+            <if test="singleLine14 != null">single_line14 = #{singleLine14},</if>
+            <if test="singleLine15 != null">single_line15 = #{singleLine15},</if>
+            <if test="singleLine16 != null">single_line16 = #{singleLine16},</if>
+            <if test="singleLine17 != null">single_line17 = #{singleLine17},</if>
+            <if test="singleLine18 != null">single_line18 = #{singleLine18},</if>
+            <if test="singleLine19 != null">single_line19 = #{singleLine19},</if>
+            <if test="singleLine20 != null">single_line20 = #{singleLine20},</if>
+            <if test="note1 != null">note1 = #{note1},</if>
+            <if test="note2 != null">note2 = #{note2},</if>
+            <if test="note3 != null">note3 = #{note3},</if>
+            <if test="note4 != null">note4 = #{note4},</if>
+            <if test="note5 != null">note5 = #{note5},</if>
+            <if test="note6 != null">note6 = #{note6},</if>
+            <if test="note7 != null">note7 = #{note7},</if>
+            <if test="note8 != null">note8 = #{note8},</if>
+            <if test="note9 != null">note9 = #{note9},</if>
+            <if test="note10 != null">note10 = #{note10},</if>
+            <if test="note11 != null">note11 = #{note11},</if>
+            <if test="note12 != null">note12 = #{note12},</if>
+            <if test="note13 != null">note13 = #{note13},</if>
+            <if test="note14 != null">note14 = #{note14},</if>
+            <if test="note15 != null">note15 = #{note15},</if>
+            <if test="photo1 != null">photo1 = #{photo1},</if>
+            <if test="photo2 != null">photo2 = #{photo2},</if>
+            <if test="photo3 != null">photo3 = #{photo3},</if>
+            <if test="photo4 != null">photo4 = #{photo4},</if>
+            <if test="photo5 != null">photo5 = #{photo5},</if>
+            <if test="photo6 != null">photo6 = #{photo6},</if>
+            <if test="photo7 != null">photo7 = #{photo7},</if>
+            <if test="photo8 != null">photo8 = #{photo8},</if>
+            <if test="photo9 != null">photo9 = #{photo9},</if>
+            <if test="photo10 != null">photo10 = #{photo10},</if>
+            <if test="photo11 != null">photo11 = #{photo11},</if>
+            <if test="photo12 != null">photo12 = #{photo12},</if>
+            <if test="photo13 != null">photo13 = #{photo13},</if>
+            <if test="photo14 != null">photo14 = #{photo14},</if>
+            <if test="photo15 != null">photo15 = #{photo15},</if>
+            <if test="seoTitle != null">seo_title = #{seoTitle},</if>
+            <if test="seoKeywords != null">seo_keywords = #{seoKeywords},</if>
+            <if test="seoDescription != null">seo_description = #{seoDescription},</if>
+            <if test="media1 != null">media1 = #{media1},</if>
+            <if test="media2 != null">media2 = #{media2},</if>
+            <if test="media3 != null">media3 = #{media3},</if>
+            <if test="media4 != null">media4 = #{media4},</if>
+            <if test="file1 != null">file1 = #{file1},</if>
+            <if test="file2 != null">file2 = #{file2},</if>
+            <if test="file3 != null">file3 = #{file3},</if>
+            <if test="file4 != null">file4 = #{file4},</if>
+            <if test="content1 != null">content1 = #{content1},</if>
+            <if test="content2 != null">content2 = #{content2},</if>
+            <if test="content3 != null">content3 = #{content3},</if>
+            <if test="content4 != null">content4 = #{content4},</if>
+            <if test="content5 != null">content5 = #{content5},</if>
+            <if test="content6 != null">content6 = #{content6},</if>
+            published=0,
+        </set>
+        WHERE id = #{id}
+    </update>
+    <select id="getArticleById" resultType="com.xinhongru.entity.ContentEntity" resultMap="customMap">
+        select *
+        from t_contents
+        where id = #{id}
+        <include refid="whereCommon"></include>
+        <include refid="validityPeriod"></include>
+        LIMIT 1
+    </select>
+    <select id="getContentIdByContentCode" resultType="com.xinhongru.entity.ContentEntity">
+        select id, content_code
+        from t_contents
+        where content_code = #{contentCode}
+          and site_project_id = #{siteProjectId}
+          and deleted = 0
+        LIMIT 1
+    </select>
+    <select id="getContentListByContentCodes" resultType="com.xinhongru.entity.ContentEntity">
+        select id, content_code
+        from t_contents
+        where site_project_id = #{siteProjectId}
+        and content_code in
+        <foreach collection="contentCodes" item="contentCode" open="(" separator="," close=")">
+            #{contentCode}
+        </foreach>
+        and deleted = 0
+    </select>
+    <select id="getArticleByClassId" resultType="com.xinhongru.entity.ContentEntity" resultMap="customMap">
+        select
+        <include refid="fieldCommon"></include>
+        from t_contents
+        where class_id = #{classId}
+        and deleted = 0
+        <include refid="validityPeriod"></include>
+        <include refid="settingCommon"></include>
+        <include refid="orderCommon"></include>
+        limit #{limit}
+    </select>
+    <select id="getArticleByClassIdWithFilters" resultType="com.xinhongru.entity.ContentEntity" resultMap="customMap">
+        select
+        <include refid="fieldCommon"></include>
+        from t_contents
+        where class_id = #{classId}
+        and deleted = 0
+        <include refid="validityPeriod"></include>
+        <include refid="settingCommon"></include>
+        <if test="filters != null and filters.size() &gt; 0">
+            <foreach collection="filters" index="col" item="val">
+                AND ${col} = #{val}
+            </foreach>
+        </if>
+        <include refid="orderCommon"></include>
+        limit #{limit}
+    </select>
+    <select id="getContentListByParentId" resultType="com.xinhongru.entity.ContentEntity" resultMap="customMap">
+        select
+        <include refid="fieldCommon"></include>
+        from t_contents
+        where class_id in ( select id from t_oneshot where parent_id= #{parentId} and is_deleted=0 and is_system=0 and
+        has_front_channel=1 order by sort asc,create_time asc, id asc)
+        <if test="outClassIds!=null">
+            <foreach item="id" separator="," open=" and class_id not in(" close=")" collection="outClassIds">
+                #{id}
+            </foreach>
+        </if>
+        <include refid="validityPeriod"></include>
+        <include refid="settingCommon"></include>
+        <include refid="orderCommon"></include>
+        limit #{limit}
+    </select>
+    <select id="getInfoListByClassIdXgidAndPageAndPageSize" resultType="com.xinhongru.entity.ContentEntity" resultMap="customMap">
+        select
+        <include refid="fieldCommon"></include>
+        from t_contents
+        where class_id=#{classid} and xgid=#{xgid}
+        <if test="conditionVo.key!=null">
+            and (title like concat('%',#{conditionVo.key},'%') or note1 like concat('%',#{conditionVo.key},'%'))
+        </if>
+        <if test="conditionVo.year!=null">
+            and year(create_time)=#{conditionVo.year}
+        </if>
+        <if test="conditionVo.month!=null">
+            and month(create_time)=#{conditionVo.month}
+        </if>
+        <include refid="whereCommon"></include>
+        <include refid="validityPeriod"></include>
+        <include refid="orderCommon"></include>
+        limit #{page},#{pageSize}
+    </select>
+    <select id="getInfoCountByClassIdXgidAndPage" resultType="java.lang.Integer">
+        select count(*)
+        from t_contents
+        where class_id = #{classid} and xgid=#{xgid}
+        <if test="conditionVo.key!=null">
+            and (title like concat('%',#{conditionVo.key},'%') or note1 like concat('%',#{conditionVo.key},'%'))
+        </if>
+        <if test="conditionVo.year!=null">
+            and year(create_time)=#{conditionVo.year}
+        </if>
+        <if test="conditionVo.month!=null">
+            and month(create_time)=#{conditionVo.month}
+        </if>
+        <include refid="whereCommon"></include>
+        <include refid="validityPeriod"></include>
+    </select>
+    <select id="getIdList" resultType="java.lang.Integer">
+        select id from t_contents
+        where class_id=#{classId}
+        <include refid="whereCommon"></include>
+        <include refid="validityPeriod"></include>
+        and xgid = #{relationId}
+        <include refid="orderCommon"></include>
+    </select>
+    <resultMap id="customMap" type="com.xinhongru.entity.ContentEntity">
+        <result column="create_time" property="createTime" javaType="java.time.LocalDateTime"
+                 jdbcType="TIMESTAMP"
+                 typeHandler="com.xinhongru.typeHandler.LocalDateTimeTypeHandler"/>
+        <result column="begin_time" property="beginTime" javaType="java.time.LocalDateTime"
+                jdbcType="TIMESTAMP"
+                typeHandler="com.xinhongru.typeHandler.LocalDateTimeTypeHandler"/>
+        <result column="end_time" property="endTime" javaType="java.time.LocalDateTime"
+                jdbcType="TIMESTAMP"
+                typeHandler="com.xinhongru.typeHandler.LocalDateTimeTypeHandler"/>
+        <result column="entry_into_force_time" property="entryIntoForceTime" javaType="java.time.LocalDateTime"
+                jdbcType="TIMESTAMP"
+                typeHandler="com.xinhongru.typeHandler.LocalDateTimeTypeHandler"/>
+        <result column="expiration_time" property="expirationTime" javaType="java.time.LocalDateTime"
+                jdbcType="TIMESTAMP"
+                typeHandler="com.xinhongru.typeHandler.LocalDateTimeTypeHandler"/>
+        <result column="create_date" property="createTime" javaType="java.time.LocalDateTime"
+                jdbcType="TIMESTAMP"
+                typeHandler="com.xinhongru.typeHandler.LocalDateTimeTypeHandler"/>
+    </resultMap>
+    <sql id="publishedNewsWhere">
+        where site_project_id = #{siteId} and class_id = #{classId}
+        and status = 1 and deleted = 0
+        <include refid="validityPeriod"/>
+    </sql>
+    <select id="getEventSummaryPage" resultMap="customMap">
+        select <include refid="fieldSummary"/>, site_project_id
+        from t_contents
+        <include refid="publishedNewsWhere"/>
+        order by sort desc, create_time desc, id desc
+    </select>
+    <select id="getPublishedContentPage" resultMap="customMap">
+        select <include refid="fieldCommon"/>, site_project_id
+        from t_contents
+        <include refid="publishedNewsWhere"/>
+        order by sort desc, create_time desc, id desc
+    </select>
+    <select id="getNewsSummaryPage" resultMap="customMap">
+        select <include refid="fieldSummary"/>, site_project_id
+        from t_contents
+        <include refid="publishedNewsWhere"/>
+        <if test="categoryValues != null and categoryValues.size() > 0">
+            and single_line5 in
+            <foreach collection="categoryValues" item="value" open="(" separator="," close=")">
+                #{value}
+            </foreach>
+        </if>
+        <if test="monthStart != null">and create_time &gt;= #{monthStart}</if>
+        <if test="monthEnd != null">and create_time &lt; #{monthEnd}</if>
+        order by sort desc, create_time desc, id desc
+    </select>
+    <select id="getPublishedNewsSummary" resultMap="customMap">
+        select <include refid="fieldSummary"/>, site_project_id
+        from t_contents
+        <include refid="publishedNewsWhere"/>
+        and id = #{id}
+    </select>
+    <select id="getNewsNeighbor" resultMap="customMap">
+        select <include refid="fieldSummary"/>, site_project_id
+        from t_contents
+        <include refid="publishedNewsWhere"/>
+        <choose>
+            <when test="previous">
+                <choose>
+                    <when test="time != null">
+                        and (create_time &gt; #{time} or (create_time = #{time} and id &gt; #{id}))
+                    </when>
+                    <otherwise>
+                        and (create_time is not null or (create_time is null and id &gt; #{id}))
+                    </otherwise>
+                </choose>
+                order by case when create_time is null then 0 else 1 end, create_time asc, id asc
+            </when>
+            <otherwise>
+                <choose>
+                    <when test="time != null">
+                        and (create_time &lt; #{time} or (create_time = #{time} and id &lt; #{id})
+                             or create_time is null)
+                    </when>
+                    <otherwise>and create_time is null and id &lt; #{id}</otherwise>
+                </choose>
+                order by case when create_time is null then 1 else 0 end, create_time desc, id desc
+            </otherwise>
+        </choose>
+        limit 1
+    </select>
+    <select id="getUnpinnedArticleSummaryPage" resultMap="customMap">
+        select <include refid="fieldSummary"/>, site_project_id
+        from t_contents
+        <include refid="publishedNewsWhere"/>
+        and (menu_top is null or menu_top != 1)
+        order by case when create_time is null then 1 else 0 end, create_time desc, id desc
+    </select>
+    <select id="getChannelTopArticleSummariesByIdentifies" resultMap="customMap">
+        select <include refid="fieldSummary"/>, site_project_id
+        from t_contents
+        where site_project_id = #{siteId} and status = 1 and deleted = 0 and channel_top = 1
+        and class_id in (
+            select id from t_oneshot
+            where site_project_id = #{siteId} and identifies = #{identifies}
+            and deleted = 0 and is_system = 0
+        )
+        <include refid="validityPeriod"/>
+        order by sort desc, create_time desc, id desc
+        limit #{limit}
+    </select>
+    <select id="getPopularArticleSummariesByIdentifies" resultMap="customMap">
+        select <include refid="fieldSummary"/>, site_project_id
+        from t_contents
+        where site_project_id = #{siteId} and status = 1 and deleted = 0
+        and class_id in (
+            select id from t_oneshot
+            where site_project_id = #{siteId} and identifies = #{identifies}
+            and deleted = 0 and is_system = 0
+        )
+        <include refid="validityPeriod"/>
+        order by hits desc, sort desc, create_time desc, id desc
+        limit #{limit}
+    </select>
+    <select id="getPublishedSummariesByIds" resultMap="customMap">
+        select <include refid="fieldSummary"/>, site_project_id
+        from t_contents
+        where site_project_id = #{siteId} and status = 1 and deleted = 0
+        and id in <foreach collection="ids" item="id" open="(" separator="," close=")">#{id}</foreach>
+        <include refid="validityPeriod"/>
+        order by sort desc, create_time desc, id desc
+    </select>
+    <select id="getPublishedSummariesByRelations" resultMap="customMap">
+        select <include refid="fieldSummary"/>, site_project_id
+        from t_contents
+        where site_project_id = #{siteId} and status = 1 and deleted = 0
+        and class_id in <foreach collection="classIds" item="id" open="(" separator="," close=")">#{id}</foreach>
+        and xgid in <foreach collection="relationIds" item="id" open="(" separator="," close=")">#{id}</foreach>
+        <include refid="validityPeriod"/>
+        order by sort desc, create_time desc, id desc
+    </select>
+    <select id="getPinnedArticleSummaries" resultMap="customMap">
+        select <include refid="fieldSummary"/>
+        from t_contents
+        <include refid="publishedNewsWhere"/>
+        and menu_top = 1
+        order by sort desc, create_time desc, id desc
+        limit #{limit}
+    </select>
+    <select id="getArticleSummariesByClassId" resultType="com.xinhongru.entity.ContentEntity" resultMap="customMap">
+        select <include refid="fieldSummary"/>
+        from t_contents where class_id = #{classId}
+        <include refid="validityPeriod"/>
+        <include refid="orderCommon"/>
+        limit #{limit}
+    </select>
+    <select id="getArticlePageByClassId" resultType="com.xinhongru.entity.ContentEntity" resultMap="customMap">
+        select
+        <include refid="fieldCommon"></include>
+        from t_contents
+        where class_id = #{classId}
+        <include refid="whereCommon"></include>
+        <include refid="validityPeriod"></include>
+        <include refid="settingCommon"></include>
+        <include refid="orderCommon"></include>
+        limit #{start},#{limit}
+    </select>
+    <select id="getGroupByTitle" resultType="com.xinhongru.entity.ContentEntity" resultMap="customMap">
+        select single_line8
+        from t_contents
+        <where>
+            <if test="classId!=null">
+                and class_id=#{classId}
+            </if>
+            <if test="xgid!=null">
+                and xgid=#{xgid}
+            </if>
+        </where>
+        <include refid="whereCommon"></include>
+        <include refid="validityPeriod"></include>
+        group by single_line8 order by single_line8
+    </select>
+    <select id="getInfoListByKeyPageAndPageSize" resultType="com.xinhongru.entity.ContentEntity" resultMap="customMap">
+        select id,
+        class_id,
+        title,
+        single_line4,
+        note1,
+        file1,
+        create_time from t_contents
+        where
+        <if test="conditionVo.classIds!=null">
+            class_id in (#{conditionVo.classIds})
+        </if>
+        <if test="conditionVo.classIds==null">
+            class_id in (select id from t_oneshot where page_type=1 and has_front_channel=1 and (detail_page_url !='' and detail_page_url is not null) and is_deleted=0)
+        </if>
+        <include refid="whereCommon"></include>
+        <include refid="validityPeriod"></include>
+        <if test="conditionVo.key!=null">
+            and title like concat('%',#{conditionVo.key},'%')
+        </if>
+        <include refid="validityPeriod"></include>
+        <include refid="orderCommon"></include>
+        limit #{startNumber},#{pageSize}
+    </select>
+    <select id="getInfoCountByKeyAndPage" resultType="java.lang.Integer">
+        select count(*) from t_contents
+        where
+        <if test="conditionVo.classIds!=null">
+            class_id in (#{conditionVo.classIds})
+        </if>
+        <if test="conditionVo.classIds==null">
+            class_id in (select id from t_oneshot where page_type=1 and has_front_channel=1 and (detail_page_url !='' and detail_page_url is not null) and is_deleted=0)
+        </if>
+        <include refid="whereCommon"></include>
+        <if test="conditionVo.key!=null">
+            and title like concat('%',#{conditionVo.key},'%')
+        </if>
+        <include refid="validityPeriod"></include>
+        <include refid="whereCommon"></include>
+    </select>
+    <select id="getContentListByClassIdAndRelationId" resultType="com.xinhongru.entity.ContentEntity" resultMap="customMap">
+        select *
+        from t_contents
+        <where>
+            <if test="classId!=null">class_id=#{classId}</if>
+            <if test="relationId!=null">and xgid=#{relationId}</if>
+        </where>
+        <include refid="whereCommon"></include>
+        <include refid="validityPeriod"></include>
+        <include refid="orderCommon"></include>
+    </select>
+    <select id="getArticleForPrevAndNextById" resultType="com.xinhongru.entity.ContentEntity" resultMap="customMap">
+        select id,title,single_line4,file1,class_id
+        from t_contents
+        where id = #{id}
+        <include refid="whereCommon"></include>
+        <include refid="validityPeriod"></include>
+        LIMIT 1
+    </select>
+    <select id="getContentListNoPublishedByClassId" resultType="com.xinhongru.entity.ContentEntity" resultMap="customMap">
+        select
+        <include refid="fieldCommon"></include>
+        from t_contents
+        where class_id = #{classId}
+        <include refid="whereCommon"></include>
+        and published=0
+        <include refid="validityPeriod"></include>
+    </select>
+    <select id="getTitleById" resultType="java.lang.String">
+        select title from t_contents
+        where id=#{id}
+        <include refid="whereCommon"></include>
+        <include refid="validityPeriod"></include>
+    </select>
+    <select id="getContentListByParentIdAndShowPosition" resultType="com.xinhongru.entity.ContentEntity" resultMap="customMap">
+        select
+        <include refid="fieldCommon"></include>
+        from t_contents
+        where deleted=0 and status=1
+        <foreach item="classId" separator="," open=" and class_id in(" close=")" collection="classIdIntegerList">
+            #{classId}
+        </foreach>
+        <include refid="validityPeriod"></include>
+        <include refid="orderCommon"></include>
+        limit #{limit}
+    </select>
+    <select id="getInfoListByParentIdAndPageAndPageSize" resultType="com.xinhongru.entity.ContentEntity" resultMap="customMap">
+        select
+        <include refid="fieldCommon"></include>
+        from t_contents
+        where class_id in (( select id from t_oneshot where parent_id= #{parentId} and is_deleted=0 and is_system=0 and
+        has_front_channel=1 order by sort asc,create_time asc, id asc))
+        <if test="conditionVo.key!=null">
+            and title like concat('%',#{conditionVo.key},'%')
+        </if>
+        <if test="conditionVo.year!=null">
+            and year(create_time)=#{conditionVo.year}
+        </if>
+        <if test="conditionVo.month!=null">
+            and month(create_time)=#{conditionVo.month}
+        </if>
+        <if test="conditionVo.category!=null">
+            and single_line5 like concat('%',#{conditionVo.category},'%')
+        </if>
+        <if test="conditionVo.road!=null">
+            and single_line6 like concat('%',#{conditionVo.road},'%')
+        </if>
+        <include refid="whereCommon"></include>
+        <include refid="validityPeriod"></include>
+        <include refid="orderCommon"></include>
+        limit #{page},#{pageSize}
+    </select>
+    <select id="getInfoCountByParentIdAndPage" resultType="java.lang.Integer">
+        select count(*)
+        from t_contents
+        where class_id in (( select id from t_oneshot where parent_id= #{parentId} and is_deleted=0 and is_system=0 and
+        has_front_channel=1 order by sort asc,create_time asc, id asc))
+        <if test="conditionVo.key!=null">
+            and title like concat('%',#{conditionVo.key},'%')
+        </if>
+        <if test="conditionVo.year!=null">
+            and year(create_time)=#{conditionVo.year}
+        </if>
+        <if test="conditionVo.month!=null">
+            and month(create_time)=#{conditionVo.month}
+        </if>
+        <if test="conditionVo.category!=null">
+            and single_line5 like concat('%',#{conditionVo.category},'%')
+        </if>
+        <if test="conditionVo.road!=null">
+            and single_line6 like concat('%',#{conditionVo.road},'%')
+        </if>
+        <include refid="whereCommon"></include>
+        <include refid="validityPeriod"></include>
+    </select>
+    <select id="getContentHotListByParentId" resultType="com.xinhongru.entity.ContentEntity" resultMap="customMap">
+        select
+        <include refid="fieldCommon"></include>
+        from t_contents
+        where deleted=0 and status=1
+        <foreach item="classId" separator="," open=" and class_id in(" close=")" collection="classIdList">
+            #{classId}
+        </foreach>
+        <include refid="validityPeriod"></include>
+        order by hits desc,sort desc, create_time desc, id desc
+        limit #{limit}
+    </select>
+
+
+
+    <select id="getContentHotListByClassId" resultType="com.xinhongru.entity.ContentEntity" resultMap="customMap">
+        select
+        <include refid="fieldCommon"></include>
+        from t_contents
+        where deleted=0 and status=1 and class_id=#{classId}
+
+        <include refid="validityPeriod"></include>
+        order by hits desc,sort desc, create_time desc, id desc
+        limit #{limit}
+    </select>
+    <select id="getContentListByIds" resultType="com.xinhongru.entity.ContentEntity" resultMap="customMap">
+        select *
+        from t_contents
+        where deleted=0 and status=1
+        <foreach collection="idList" open=" and id in (" close=")" item="id" separator=",">
+            #{id}
+        </foreach>
+        <include refid="validityPeriod"></include>
+        order by sort desc, create_time desc, id desc
+    </select>
+
+
+    <select id="getArticleByTitleAndClassId" resultType="com.xinhongru.entity.ContentEntity" resultMap="customMap">
+        select *
+        from t_contents
+        where title = #{title} and class_id=#{classId}
+        and deleted=0
+        <include refid="validityPeriod"></include>
+        LIMIT 1
+    </select>
+
+    <select id="getContentFieldByClassIdGroupBy" resultType="java.lang.String">
+        select
+        <if test="fieldName == 'createTime'">
+            YEAR(create_time) AS year
+        </if>
+        <if test="fieldName != 'createTime'">
+            ${fieldName}
+        </if>
+        from
+        t_contents
+        where
+            class_id = #{classId}
+            and status = 1
+            and deleted = 0
+        group by
+        <if test="fieldName == 'createTime'">
+            YEAR(create_time)
+        </if>
+        <if test="fieldName != 'createTime'">
+            ${fieldName}
+        </if>
+
+        <choose>
+            <when test="isGroup and fieldName != 'createTime'">
+                order by ${fieldName} ${sortType}
+            </when>
+            <when test="isGroup and fieldName == 'createTime'">
+                order by YEAR(create_time) ${sortType}
+            </when>
+            <otherwise>
+                order by sort desc, create_time desc, id desc
+            </otherwise>
+        </choose>
+        limit #{limit}
+    </select>
+    <select id="getInfoListByClassIdsAndPageAndPageSize" resultType="com.xinhongru.entity.ContentEntity">
+        select
+        <include refid="fieldCommon"></include>
+        from t_contents
+        where xgid=#{relationId}
+        <foreach item="classId" separator="," open=" and class_id in(" close=")" collection="classIdList">
+            #{classId}
+        </foreach>
+        <if test="conditionVo.key!=null">
+            and title like concat('%',#{conditionVo.key},'%')
+        </if>
+        <if test="conditionVo.year!=null">
+            and year(createTime)=#{conditionVo.year}
+        </if>
+        <if test="conditionVo.month!=null">
+            and month(createTime)=#{conditionVo.month}
+        </if>
+        <if test="conditionVo.education!=null">
+            and single_line7=#{conditionVo.education}
+        </if>
+        <include refid="whereCommon"></include>
+        <include refid="validityPeriod"></include>
+        <include refid="orderCommon"></include>
+        limit #{page},#{pageSize}
+    </select>
+    <select id="getInfoCountByClassIdsAndPage" resultType="java.lang.Integer">
+        select count(*)
+        from t_contents
+        where xgid=#{relationId}
+        <foreach item="classId" separator="," open=" and class_id in(" close=")" collection="classIdList">
+            #{classId}
+        </foreach>
+        <if test="conditionVo.key!=null">
+            and title like concat('%',#{conditionVo.key},'%')
+        </if>
+        <if test="conditionVo.year!=null">
+            and year(createTime)=#{conditionVo.year}
+        </if>
+        <if test="conditionVo.month!=null">
+            and month(createTime)=#{conditionVo.month}
+        </if>
+        <if test="conditionVo.education!=null">
+            and single_line7=#{conditionVo.education}
+        </if>
+        <include refid="whereCommon"></include>
+        <include refid="validityPeriod"></include>
+    </select>
+    <select id="getInfoListByIdEntity" resultType="com.xinhongru.entity.ContentEntity">
+        select id,class_id
+         from t_contents
+        where
+        <if test="conditionVo.classIds!=null">
+            class_id in (#{conditionVo.classIds})
+        </if>
+        <if test="conditionVo.classIds==null">
+            class_id in (select id from t_oneshot where page_type=1 and has_front_channel=1 and (detail_page_url !='' and detail_page_url is not null) and is_deleted=0)
+        </if>
+        <include refid="whereCommon"></include>
+        <include refid="validityPeriod"></include>
+        <if test="conditionVo.key!=null">
+            and title like concat('%',#{conditionVo.key},'%')
+        </if>
+        <include refid="validityPeriod"></include>
+        <include refid="orderCommon"></include>
+    </select>
+
+
+</mapper>

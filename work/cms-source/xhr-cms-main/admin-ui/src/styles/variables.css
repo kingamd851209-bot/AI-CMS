@@ -1,0 +1,149 @@
+:root {
+  --admin-color-primary: #d92d20;
+  --admin-color-primary-hover: #b42318;
+  --admin-color-primary-soft: #fef3f2;
+  --admin-color-primary-strong: #912018;
+  --admin-color-success: #15803d;
+  --admin-color-success-bg: #ecfdf3;
+  --admin-color-success-border: #abefc6;
+  --admin-color-warning: #b45309;
+  --admin-color-warning-bg: #fffaeb;
+  --admin-color-warning-border: #fedf89;
+  --admin-color-danger: #b91c1c;
+  --admin-color-danger-bg: #fef3f2;
+  --admin-color-danger-border: #fecdca;
+  --admin-color-info: #0f766e;
+  --admin-color-info-bg: #f0fdfa;
+  --admin-color-info-border: #99f6e4;
+  --admin-color-neutral-bg: #f8fafc;
+  --admin-color-neutral-border: #e4e7ec;
+
+  --el-color-primary-rgb: 217, 45, 32;
+  --el-color-primary: #d92d20;
+  --el-color-primary-light-3: #e35d53;
+  --el-color-primary-light-5: #eb867f;
+  --el-color-primary-light-7: #f3afab;
+  --el-color-primary-light-8: #f7c5c2;
+  --el-color-primary-light-9: #fef3f2;
+  --el-color-primary-dark-2: #ae241a;
+
+  --admin-bg-page: #f5f5f7;
+  --admin-bg-surface: #ffffff;
+  --admin-bg-subtle: #f8fafc;
+  --admin-bg-muted: #eef2f6;
+  --admin-bg-emphasis: #101828;
+  --admin-bg-emphasis-soft: #182230;
+  --admin-bg-table-header: #f8fafc;
+  --admin-bg-drawer: #ffffff;
+
+  --admin-border-subtle: #e4e7ec;
+  --admin-border-strong: #d0d5dd;
+  --admin-border-inverse: rgb(255 255 255 / 0.12);
+
+  --admin-text-primary: #172033;
+  --admin-text-secondary: #475569;
+  --admin-text-muted: #64748b;
+  --admin-text-inverse: #ffffff;
+  --admin-text-soft: #98a2b3;
+
+  /* 兼容业务页面既有名称，所有页面共用同一套表面、边框与文字颜色。 */
+  --admin-surface: var(--admin-bg-surface);
+  --admin-surface-alt: var(--admin-bg-subtle);
+  --admin-border: var(--admin-border-subtle);
+  --admin-text: var(--admin-text-primary);
+  --admin-text-strong: var(--admin-text-primary);
+  --admin-accent: var(--admin-color-primary);
+  --admin-bg-hover: var(--admin-bg-muted);
+  --admin-fill-hover: var(--admin-bg-muted);
+  --admin-shadow-card: var(--admin-shadow-sm);
+  --admin-mono: "SFMono-Regular", Consolas, monospace;
+
+  /* 后台文字层级：辅助 13 / 正文 14 / 区域 16 / 顶栏 20 / 页面 24 */
+  --admin-font-family: "PingFang SC", "Microsoft YaHei", Inter, Arial, sans-serif;
+  --admin-font-size-small: 13px;
+  --admin-font-size-base: 14px;
+  --admin-font-size-section: 16px;
+  --admin-font-size-title: 20px;
+  --admin-font-size-page: 24px;
+  --admin-line-height: 1.6;
+  --el-font-family: var(--admin-font-family);
+  --el-font-size-extra-small: 12px;
+  --el-font-size-small: var(--admin-font-size-small);
+  --el-font-size-base: var(--admin-font-size-base);
+  --el-font-size-medium: var(--admin-font-size-section);
+  --el-font-size-large: var(--admin-font-size-title);
+  --el-font-size-extra-large: var(--admin-font-size-page);
+  --el-text-color-primary: var(--admin-text-primary);
+  --el-text-color-regular: var(--admin-text-secondary);
+  --el-text-color-secondary: var(--admin-text-muted);
+  --el-component-size: 36px;
+  --el-component-size-small: 28px;
+  /* 仅用于表格工具栏，与 small 按钮的高度对齐。 */
+  --admin-table-control-height: 24px;
+
+  --admin-space-1: 4px;
+  --admin-space-2: 8px;
+  --admin-space-3: 12px;
+  --admin-space-4: 16px;
+  --admin-space-5: 20px;
+  --admin-space-6: 24px;
+  --admin-space-7: 28px;
+  --admin-space-8: 32px;
+  --admin-space-10: 40px;
+
+  /* 外围留白仅由 .admin-content 设置，页面根容器不得重复添加；桌面和窄屏共用。 */
+  --admin-content-padding: 8px;
+  --admin-card-gap: 5px;
+
+  /* 卡片外观与内边距；保留普通、紧凑和宽松规格。 */
+  --admin-card-padding: var(--admin-space-5);
+  --admin-card-padding-compact: var(--admin-space-4);
+  --admin-card-padding-roomy: var(--admin-space-6);
+  --admin-card-radius: var(--admin-radius-lg);
+  --admin-card-border: 1px solid var(--admin-border-subtle);
+
+  /* 内容区栏目导航，不影响应用主菜单栏。 */
+  --admin-tree-min-width: 240px;
+  --admin-tree-width: 300px;
+  --admin-content-tree-width: 320px;
+  --admin-tree-toggle-rail-width: 16px;
+  --admin-tree-toggle-width: 14px;
+  --admin-tree-toggle-padding: 10px;
+  --admin-tree-toggle-gap: 10px;
+  --admin-tree-toggle-font-size: 10px;
+
+  --admin-radius-sm: 4px;
+  --admin-radius-md: 6px;
+  --admin-radius-lg: 8px;
+  --admin-radius-xl: 14px;
+  --admin-radius-pill: 999px;
+
+  --admin-shadow-sm: 0 1px 2px rgb(15 23 42 / 0.08);
+  --admin-shadow-md: 0 8px 24px rgb(15 23 42 / 0.08);
+  --admin-shadow-lg: 0 20px 44px rgb(15 23 42 / 0.1);
+
+  --admin-rail-width: 72px;
+  --admin-sidebar-width: 220px;
+  --admin-sidebar-collapsed-width: 84px;
+  --admin-header-height: 64px;
+  --admin-shell-gap: 1px;
+  --admin-breakpoint-compact: 900px;
+  --admin-table-min-width: 720px;
+  --admin-table-min-width-compact: 640px;
+  --admin-drawer-max-width: 680px;
+  --admin-drawer-mobile-gutter: 24px;
+}
+
+body {
+  margin: 0;
+  color: var(--admin-text-primary);
+  background: var(--admin-bg-page);
+  font-family: var(--admin-font-family);
+  font-size: var(--admin-font-size-base);
+  line-height: var(--admin-line-height);
+  letter-spacing: 0;
+}
+
+* {
+  box-sizing: border-box;
+}

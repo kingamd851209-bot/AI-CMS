@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xinhongru.cms.search.PublicSearchMapper">
+ <select id="menus" resultType="com.xinhongru.entity.OneshotEntity">
+  SELECT id,site_project_id,class_name,page_type,status,has_front_channel,is_deleted,list_page_url,detail_page_url,list_page_template,detail_page_template,parent_id
+  FROM t_oneshot WHERE site_project_id=#{siteId} AND deleted=0 AND is_deleted=0 AND has_front_channel=1 AND page_type IN (0,1) ORDER BY id
+ </select>
+ <sql id="allowedMenus">
+  <choose><when test="menus != null and !menus.isEmpty()">IN <foreach collection="menus" item="menu" open="(" separator="," close=")">#{menu}</foreach></when><otherwise>IN (-1)</otherwise></choose>
+ </sql>
+ <sql id="candidates">
+  SELECT 'content' kind,c.id record_id,c.class_id menu_id,c.title,COALESCE(c.public_search_text,c.title) search_text,c.create_time sort_time
+  FROM t_contents c JOIN t_oneshot m ON m.id=c.class_id
+  WHERE m.site_project_id=#{q.siteId} AND (c.site_project_id=#{q.siteId} OR c.site_project_id IS NULL) AND c.deleted=0 AND c.status=1
+  <if test="q.year != null">AND YEAR(c.create_time)=#{q.year}</if>
+  <if test="q.month != null">AND MONTH(c.create_time)=#{q.month}</if>
+  AND c.entry_into_force_time&lt;=NOW() AND c.expiration_time&gt;=NOW()
+  AND m.deleted=0 AND m.is_deleted=0 AND m.has_front_channel=1 AND m.page_type=1
+  AND m.id <include refid="allowedMenus"/>
+  AND COALESCE(c.public_search_text,c.title) LIKE #{q.likePattern} ESCAPE '\\'
+  <if test="!contentOnly">
+   UNION ALL
+   SELECT 'singlePage' kind,m.id record_id,m.id menu_id,m.class_name title,COALESCE(m.public_search_text,m.class_name) search_text,m.create_time sort_time
+   FROM t_oneshot m
+   WHERE m.site_project_id=#{q.siteId} AND m.deleted=0 AND m.is_deleted=0 AND m.has_front_channel=1 AND m.page_type=0 AND m.status=3
+   <if test="q.year != null">AND YEAR(m.create_time)=#{q.year}</if>
+   <if test="q.month != null">AND MONTH(m.create_time)=#{q.month}</if>
+   AND m.id <include refid="allowedMenus"/>
+   AND COALESCE(m.public_search_text,m.class_name) LIKE #{q.likePattern} ESCAPE '\\'
+  </if>
+ </sql>
+ <select id="count" resultType="long">SELECT COUNT(*) FROM (<include refid="candidates"/>) candidates</select>
+ <select id="page" resultType="com.xinhongru.cms.search.PublicSearchRow">
+  SELECT kind,record_id,menu_id,title,search_text,sort_time AS create_time FROM (<include refid="candidates"/>) candidates
+  ORDER BY sort_time DESC,kind,record_id DESC
+ </select>
+
+ <select id="projectionBatch" resultType="com.xinhongru.entity.ContentEntity" useCache="false" flushCache="true">
+  SELECT c.*,c.class_id AS classid FROM t_contents c JOIN t_oneshot m ON m.id=c.class_id
+  WHERE m.site_project_id=#{siteId} AND (c.site_project_id=#{siteId} OR c.site_project_id IS NULL) AND c.class_id=#{menuId} AND c.id&gt;#{after}
+  ORDER BY c.id LIMIT #{limit} FOR UPDATE
+ </select>
+ <update id="writeContentProjections">
+  UPDATE t_contents SET public_search_text=CASE id
+  <foreach collection="updates" item="row">WHEN #{row.id} THEN #{row.text}</foreach>
+  ELSE public_search_text END
+  WHERE (site_project_id=#{siteId} OR site_project_id IS NULL) AND class_id=#{menuId}
+  AND EXISTS(SELECT 1 FROM t_oneshot m WHERE m.id=#{menuId} AND m.site_project_id=#{siteId}) AND id IN
+  <foreach collection="updates" item="row" open="(" separator="," close=")">#{row.id}</foreach>
+ </update>
+ <update id="writeSingleProjection">UPDATE t_oneshot SET public_search_text=#{text} WHERE id=#{menuId} AND site_project_id=#{siteId}</update>
+</mapper>

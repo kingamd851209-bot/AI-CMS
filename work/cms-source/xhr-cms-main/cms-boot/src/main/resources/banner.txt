@@ -1,0 +1,5 @@
+${AnsiColor.BRIGHT_GREEN}
+========== xhr cms start ...=============
+${AnsiColor.BRIGHT_YELLOW}
+Application Version: ${application.version}${application.formatted-version}
+Spring Boot Version: ${spring-boot.version}${spring-boot.formatted-version}

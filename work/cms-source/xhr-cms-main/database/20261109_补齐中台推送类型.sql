@@ -1,0 +1,2 @@
+-- 本机cms-workbench-mysql / cms_workbench，仅补现实体需要且已有迁移定义缺失列；不删表/列。
+SET @cms_wb_push_ddl = IF((SELECT COUNT(*) FROM information_schema.columns WHERE table_schema=DATABASE() AND table_name='cms_platform_push_record' AND column_name='push_type')=0,'ALTER TABLE `cms_platform_push_record` ADD COLUMN `push_type` varchar(20) NOT NULL DEFAULT ''INSERT'' COMMENT ''推送类型 INSERT新增 UPDATE更新''','SELECT 1'); PREPARE cms_wb_push_stmt FROM @cms_wb_push_ddl; EXECUTE cms_wb_push_stmt; DEALLOCATE PREPARE cms_wb_push_stmt;

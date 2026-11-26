@@ -1,0 +1,125 @@
+# Maven output and temporary build metadata from all modules
+target/
+*.class
+*.jar
+*.war
+*.ear
+.flattened-pom.xml
+dependency-reduced-pom.xml
+pom.xml.versionsBackup
+
+# Node dependencies and generated admin UI assets
+node_modules/
+# Node lock files are kept locally and excluded from version control.
+yarn.lock
+package-lock.json
+pnpm-lock.yaml
+/admin-ui/node_modules
+/admin-ui/dist/
+/admin-ui/dist-workbench/
+/admin-ui/dist-bak/
+/admin-ui/coverage/
+/admin-ui/.vite/
+/admin-ui/.vite-temp/
+/admin-ui/.cache/
+/admin-ui/**/*.tsbuildinfo
+**/vite.config.*.timestamp-*.mjs
+# Legacy embedded output; ignored here and explicitly excluded from the backend JAR.
+/cms-boot/src/main/resources/static/admin-ui/
+
+# Local IDE/editor settings, workspaces and history
+.vscode/
+*.code-workspace
+.idea/
+*.iml
+*.ipr
+*.iws
+.fleet/
+.zed/
+.project
+.classpath
+.settings/
+.factorypath
+.metadata/
+.recommenders/
+nbproject/private/
+.vs/
+*.suo
+*.sln.docstates
+*.sublime-project
+*.sublime-workspace
+.history/
+*.swp
+*.swo
+*~
+
+# Local AI coding tool settings, rules, sessions and caches
+.agents/
+.codex/
+.claude/
+CLAUDE.md
+CLAUDE.local.md
+.cursor/
+.cursorrules
+.cursorignore
+.cursorindexingignore
+.windsurf/
+.windsurfrules
+.codeium/
+.continue/
+.cline/
+.clinerules/
+.clinerules
+.roo/
+.roorules*
+.kilocode/
+.kilocoderules/
+.gemini/
+GEMINI.md
+.aider*
+.opencode/
+opencode.json
+opencode.jsonc
+.github/copilot-instructions.md
+.github/instructions/
+.github/prompts/
+.github/agents/
+# Keep the repository's shared development guide versioned.
+AGENTS.local.md
+
+# Operating-system state
+.DS_Store
+._*
+Thumbs.db
+Desktop.ini
+
+# Logs, temporary output and local backups
+*.log
+hs_err_pid*
+/logs/
+/backups/
+/tmp/
+/html/
+test-results/
+playwright-report/
+*.zip
+*.tar.gz
+*.rar
+
+# Runtime site templates/UI packages remain versioned; their logs and OS caches do not.
+/runtime/**/logs/
+
+# Locally uploaded business files
+/runtime/assets/
+
+# Local workspaces and tool state
+.worktrees/
+.superpowers/
+/.deploy/
+/runtime/ui-packages/*/active
+
+# Ignore new user uploads; already versioned site resources remain tracked.
+/runtime/ui-packages/*/assets/upload/
+
+# 本地工作台内容单元判断，不作为站点业务资源提交。
+/runtime/ui-packages/.workbench-content-units/

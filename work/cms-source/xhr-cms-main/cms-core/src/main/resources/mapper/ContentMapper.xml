@@ -1,0 +1,1468 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xinhongru.mapper.ContentMapper">
+
+
+
+
+
+
+
+
+
+    <sql id="BASE_TABLE">
+        t_contents
+    </sql>
+    <sql id="orderCommon">
+        order by sort
+        desc,create_time desc,id desc
+    </sql>
+
+    <!-- 文章的基本列 -->
+    <sql id="BASE_COLUMN">
+        c.extension_fields, c.id, c.class_id, c.xgid,c.title,c.create_time,c.begin_time,c.end_time,c.entry_into_force_time,c.expiration_time,
+        c.status, c.tags, c.hits,c.sort,
+        c.index_top,c.index_elite,c.index_hot,
+        c.menu_top,c.menu_elite,c.menu_hot,
+        c.channel_top,c.channel_elite,c.channel_hot,c.nav_elite,
+        c.content1, c.content2, c.content3, c.content4, c.content5, c.content6,
+        c.single_line1,c.single_line2,c.single_line3,c.single_line4,c.single_line5,c.single_line6,
+        c.single_line7,c.single_line8,c.single_line9,c.single_line10,c.single_line11,c.single_line12,c.single_line13,
+        c.single_line14,c.single_line15,c.single_line16,c.single_line17,c.single_line18,c.single_line19,c.single_line20,
+        c.note1,c.note2,c.note3,c.note4,c.note5,c.note6,c.note7,c.note8,c.note9,c.note10,c.note11,c.note12,c.note13,c.note14,c.note15,
+        c.photo1,c.photo2,c.photo3,c.photo4,c.photo5,c.photo6,c.photo7,c.photo8,c.photo9,c.photo10,c.photo11,c.photo12,c.photo13,c.photo14,c.photo15,
+        c.seo_title,c.seo_keywords,c.seo_description,
+        c.media1,c.media2,c.media3,c.media4,
+        c.file1,c.file2,c.file3,c.file4
+    </sql>
+
+    <!-- 关联查询的用户表需要的字段 -->
+    <sql id="REL_USER_COLUMN">
+        u.username,
+    </sql>
+
+    <!-- 添加文章 -->
+    <insert id="addArticle" parameterType="com.xinhongru.entity.ContentEntity" useGeneratedKeys="true"
+            keyProperty="id">
+        INSERT INTO
+        <include refid="BASE_TABLE"/>
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="siteProjectId!=null">site_project_id,</if>
+            <if test="contentCode!=null">content_code,</if>
+            <if test="extensionFields!=null">extension_fields,</if>
+            <if test="publicSearchText!=null">public_search_text,</if>
+            <if test="title!=null">title,</if>
+            <if test="classid!=null">class_id,</if>
+            <if test="xgid!=null">xgid,</if>
+            <if test="createTime!=null">create_time,</if>
+            <if test="beginTime!=null">begin_time,</if>
+            <if test="endTime!=null">end_time,</if>
+            <if test="entryIntoForceTime!=null">entry_into_force_time,</if>
+            <if test="expirationTime!=null">expiration_time,</if>
+            <if test="status!=null">status,</if>
+            <if test="tags!=null">tags,</if>
+            <if test="hits!=null">hits,</if>
+            <if test="sort!=null">sort,</if>
+            <if test="indexTop!=null">index_top,</if>
+            <if test="indexElite!=null">index_elite,</if>
+            <if test="indexHot!=null">index_hot,</if>
+            <if test="menuTop!=null">menu_top,</if>
+            <if test="menuElite!=null">menu_elite,</if>
+            <if test="menuHot!=null">menu_hot,</if>
+            <if test="channelTop!=null">channel_top,</if>
+            <if test="channelElite!=null">channel_elite,</if>
+            <if test="channelHot!=null">channel_hot,</if>
+            <if test="navElite!=null">nav_elite,</if>
+            <if test="rightElite!=null">right_elite,</if>
+            <if test="leftElite!=null">left_elite,</if>
+            <if test="singleLine1!=null">single_line1,</if>
+            <if test="singleLine2!=null">single_line2,</if>
+            <if test="singleLine3!=null">single_line3,</if>
+            <if test="singleLine4!=null">single_line4,</if>
+            <if test="singleLine5!=null">single_line5,</if>
+            <if test="singleLine6!=null">single_line6,</if>
+            <if test="singleLine7!=null">single_line7,</if>
+            <if test="singleLine8!=null">single_line8,</if>
+            <if test="singleLine9!=null">single_line9,</if>
+            <if test="singleLine10!=null">single_line10,</if>
+            <if test="singleLine11!=null">single_line11,</if>
+            <if test="singleLine12!=null">single_line12,</if>
+            <if test="singleLine13!=null">single_line13,</if>
+            <if test="singleLine14!=null">single_line14,</if>
+            <if test="singleLine15!=null">single_line15,</if>
+            <if test="singleLine16!=null">single_line16,</if>
+            <if test="singleLine17!=null">single_line17,</if>
+            <if test="singleLine18!=null">single_line18,</if>
+            <if test="singleLine19!=null">single_line19,</if>
+            <if test="singleLine20!=null">single_line20,</if>
+            <if test="note1!=null">note1,</if>
+            <if test="note2!=null">note2,</if>
+            <if test="note3!=null">note3,</if>
+            <if test="note4!=null">note4,</if>
+            <if test="note5!=null">note5,</if>
+            <if test="note6!=null">note6,</if>
+            <if test="note7!=null">note7,</if>
+            <if test="note8!=null">note8,</if>
+            <if test="note9!=null">note9,</if>
+            <if test="note10!=null">note10,</if>
+            <if test="note11!=null">note11,</if>
+            <if test="note12!=null">note12,</if>
+            <if test="note13!=null">note13,</if>
+            <if test="note14!=null">note14,</if>
+            <if test="note15!=null">note15,</if>
+            <if test="photo1!=null">photo1,</if>
+            <if test="photo2!=null">photo2,</if>
+            <if test="photo3!=null">photo3,</if>
+            <if test="photo4!=null">photo4,</if>
+            <if test="photo5!=null">photo5,</if>
+            <if test="photo6!=null">photo6,</if>
+            <if test="photo7!=null">photo7,</if>
+            <if test="photo8!=null">photo8,</if>
+            <if test="photo9!=null">photo9,</if>
+            <if test="photo10!=null">photo10,</if>
+            <if test="photo11!=null">photo11,</if>
+            <if test="photo12!=null">photo12,</if>
+            <if test="photo13!=null">photo13,</if>
+            <if test="photo14!=null">photo14,</if>
+            <if test="photo15!=null">photo15,</if>
+            <if test="seoTitle!=null">seo_title,</if>
+            <if test="seoKeywords!=null">seo_keywords,</if>
+            <if test="seoDescription!=null">seo_description,</if>
+            <if test="media1!=null">media1,</if>
+            <if test="media2!=null">media2,</if>
+            <if test="media3!=null">media3,</if>
+            <if test="media4!=null">media4,</if>
+            <if test="file1!=null">file1,</if>
+            <if test="file2!=null">file2,</if>
+            <if test="file3!=null">file3,</if>
+            <if test="file4!=null">file4,</if>
+            <if test="content1!=null">content1,</if>
+            <if test="content2!=null">content2,</if>
+            <if test="content3!=null">content3,</if>
+            <if test="content4!=null">content4,</if>
+            <if test="content5!=null">content5,</if>
+            <if test="content6!=null">content6,</if>
+        </trim>
+        <trim prefix="VALUES(" suffix=")" suffixOverrides=",">
+            <if test="siteProjectId!=null">#{siteProjectId},</if>
+            <if test="contentCode!=null">#{contentCode},</if>
+            <if test="extensionFields!=null">#{extensionFields},</if>
+            <if test="publicSearchText!=null">#{publicSearchText},</if>
+            <if test="title!=null">#{title},</if>
+            <if test="classid!=null">#{classid},</if>
+            <if test="xgid!=null">#{xgid},</if>
+            <if test="createTime!=null">#{createTime},</if>
+            <if test="beginTime!=null">#{beginTime},</if>
+            <if test="endTime!=null">#{endTime},</if>
+            <if test="entryIntoForceTime!=null">#{entryIntoForceTime},</if>
+            <if test="expirationTime!=null">#{expirationTime},</if>
+            <if test="status!=null">#{status},</if>
+            <if test="tags!=null">#{tags},</if>
+            <if test="hits!=null">#{hits},</if>
+            <if test="sort!=null">#{sort},</if>
+            <if test="indexTop!=null">#{indexTop},</if>
+            <if test="indexElite!=null">#{indexElite},</if>
+            <if test="indexHot!=null">#{indexHot},</if>
+            <if test="menuTop!=null">#{menuTop},</if>
+            <if test="menuElite!=null">#{menuElite},</if>
+            <if test="menuHot!=null">#{menuHot},</if>
+            <if test="channelTop!=null">#{channelTop},</if>
+            <if test="channelElite!=null">#{channelElite},</if>
+            <if test="channelHot!=null">#{channelHot},</if>
+            <if test="navElite!=null">#{navElite},</if>
+            <if test="rightElite!=null">#{rightElite},</if>
+            <if test="leftElite!=null">#{leftElite},</if>
+            <if test="singleLine1!=null">#{singleLine1},</if>
+            <if test="singleLine2!=null">#{singleLine2},</if>
+            <if test="singleLine3!=null">#{singleLine3},</if>
+            <if test="singleLine4!=null">#{singleLine4},</if>
+            <if test="singleLine5!=null">#{singleLine5},</if>
+            <if test="singleLine6!=null">#{singleLine6},</if>
+            <if test="singleLine7!=null">#{singleLine7},</if>
+            <if test="singleLine8!=null">#{singleLine8},</if>
+            <if test="singleLine9!=null">#{singleLine9},</if>
+            <if test="singleLine10!=null">#{singleLine10},</if>
+            <if test="singleLine11!=null">#{singleLine11},</if>
+            <if test="singleLine12!=null">#{singleLine12},</if>
+            <if test="singleLine13!=null">#{singleLine13},</if>
+            <if test="singleLine14!=null">#{singleLine14},</if>
+            <if test="singleLine15!=null">#{singleLine15},</if>
+            <if test="singleLine16!=null">#{singleLine16},</if>
+            <if test="singleLine17!=null">#{singleLine17},</if>
+            <if test="singleLine18!=null">#{singleLine18},</if>
+            <if test="singleLine19!=null">#{singleLine19},</if>
+            <if test="singleLine20!=null">#{singleLine20},</if>
+            <if test="note1!=null">#{note1},</if>
+            <if test="note2!=null">#{note2},</if>
+            <if test="note3!=null">#{note3},</if>
+            <if test="note4!=null">#{note4},</if>
+            <if test="note5!=null">#{note5},</if>
+            <if test="note6!=null">#{note6},</if>
+            <if test="note7!=null">#{note7},</if>
+            <if test="note8!=null">#{note8},</if>
+            <if test="note9!=null">#{note9},</if>
+            <if test="note10!=null">#{note10},</if>
+            <if test="note11!=null">#{note11},</if>
+            <if test="note12!=null">#{note12},</if>
+            <if test="note13!=null">#{note13},</if>
+            <if test="note14!=null">#{note14},</if>
+            <if test="note15!=null">#{note15},</if>
+            <if test="photo1!=null">#{photo1},</if>
+            <if test="photo2!=null">#{photo2},</if>
+            <if test="photo3!=null">#{photo3},</if>
+            <if test="photo4!=null">#{photo4},</if>
+            <if test="photo5!=null">#{photo5},</if>
+            <if test="photo6!=null">#{photo6},</if>
+            <if test="photo7!=null">#{photo7},</if>
+            <if test="photo8!=null">#{photo8},</if>
+            <if test="photo9!=null">#{photo9},</if>
+            <if test="photo10!=null">#{photo10},</if>
+            <if test="photo11!=null">#{photo11},</if>
+            <if test="photo12!=null">#{photo12},</if>
+            <if test="photo13!=null">#{photo13},</if>
+            <if test="photo14!=null">#{photo14},</if>
+            <if test="photo15!=null">#{photo15},</if>
+            <if test="seoTitle!=null">#{seoTitle},</if>
+            <if test="seoKeywords!=null">#{seoKeywords},</if>
+            <if test="seoDescription!=null">#{seoDescription},</if>
+            <if test="media1!=null">#{media1},</if>
+            <if test="media2!=null">#{media2},</if>
+            <if test="media3!=null">#{media3},</if>
+            <if test="media4!=null">#{media4},</if>
+            <if test="file1!=null">#{file1},</if>
+            <if test="file2!=null">#{file2},</if>
+            <if test="file3!=null">#{file3},</if>
+            <if test="file4!=null">#{file4},</if>
+            <if test="content1!=null">#{content1},</if>
+            <if test="content2!=null">#{content2},</if>
+            <if test="content3!=null">#{content3},</if>
+            <if test="content4!=null">#{content4},</if>
+            <if test="content5!=null">#{content5},</if>
+            <if test="content6!=null">#{content6},</if>
+        </trim>
+    </insert>
+    <insert id="addArticleImport" parameterType="com.xinhongru.entity.ContentEntity" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO <include refid="BASE_TABLE"/>
+        (title,class_id,sort,single_line1,single_line2,create_time,site_project_id,public_search_text)
+        VALUES (#{title,jdbcType=VARCHAR},#{classid,jdbcType=INTEGER},#{sort,jdbcType=INTEGER},
+        #{singleLine1,jdbcType=VARCHAR},#{singleLine2,jdbcType=VARCHAR},#{createTime},#{siteProjectId},#{publicSearchText})
+    </insert>
+
+    <update id="assignContentCodeToOwnId">
+        update t_contents
+        set content_code = CAST(id AS CHAR)
+        where id = #{id}
+    </update>
+    <!-- 删除文章 -->
+    <delete id="deleteArticleById">
+        DELETE FROM
+        <include refid="BASE_TABLE"/>
+        WHERE id = #{id, jdbcType=INTEGER}
+    </delete>
+    <delete id="deleteArticleByIds">
+        DELETE FROM
+        <include refid="BASE_TABLE"/>
+        where id in
+        <foreach collection="cids" item="id" index="index" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+        and class_id=#{classid, jdbcType=INTEGER}
+    </delete>
+
+    <!-- 更新文章信息 -->
+    <update id="updateArticleById" parameterType="com.xinhongru.entity.ContentEntity">
+        UPDATE
+        <include refid="BASE_TABLE"/>
+        <set>
+            <if test="extensionFields!=null">extension_fields = #{extensionFields},</if>
+            <if test="publicSearchText!=null">public_search_text = #{publicSearchText},</if>
+            <if test="title != null">title = #{title},</if>
+            <if test="classid != null">class_id = #{classid},</if>
+            <if test="xgid != null">xgid = #{xgid},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="beginTime != null">begin_time = #{beginTime},</if>
+            <if test="endTime != null">end_time = #{endTime},</if>
+            <if test="entryIntoForceTime != null">entry_into_force_time = #{entryIntoForceTime},</if>
+            <if test="expirationTime != null">expiration_time = #{expirationTime},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="tags != null">tags = #{tags},</if>
+            <if test="hits != null">hits = #{hits},</if>
+            <if test="sort != null">sort = #{sort},</if>
+            <if test="indexTop != null">index_top = #{indexTop},</if>
+            <if test="indexElite != null">index_elite = #{indexElite},</if>
+            <if test="indexHot != null">index_hot = #{indexHot},</if>
+            <if test="menuTop != null">menu_top = #{menuTop},</if>
+            <if test="menuElite != null">menu_elite = #{menuElite},</if>
+            <if test="menuHot != null">menu_hot = #{menuHot},</if>
+            <if test="channelTop != null">channel_top = #{channelTop},</if>
+            <if test="channelElite != null">channel_elite = #{channelElite},</if>
+            <if test="channelHot != null">channel_hot = #{channelHot},</if>
+            <if test="navElite != null">nav_elite = #{navElite},</if>
+            <if test="rightElite != null">right_elite = #{rightElite},</if>
+            <if test="leftElite != null">left_elite = #{leftElite},</if>
+            <if test="singleLine1 != null">single_line1 = #{singleLine1},</if>
+            <if test="singleLine2 != null">single_line2 = #{singleLine2},</if>
+            <if test="singleLine3 != null">single_line3 = #{singleLine3},</if>
+            <if test="singleLine4 != null">single_line4 = #{singleLine4},</if>
+            <if test="singleLine5 != null">single_line5 = #{singleLine5},</if>
+            <if test="singleLine6 != null">single_line6 = #{singleLine6},</if>
+            <if test="singleLine7 != null">single_line7 = #{singleLine7},</if>
+            <if test="singleLine8 != null">single_line8 = #{singleLine8},</if>
+            <if test="singleLine9 != null">single_line9 = #{singleLine9},</if>
+            <if test="singleLine10 != null">single_line10 = #{singleLine10},</if>
+            <if test="singleLine11 != null">single_line11 = #{singleLine11},</if>
+            <if test="singleLine12 != null">single_line12 = #{singleLine12},</if>
+            <if test="singleLine13 != null">single_line13 = #{singleLine13},</if>
+            <if test="singleLine14 != null">single_line14 = #{singleLine14},</if>
+            <if test="singleLine15 != null">single_line15 = #{singleLine15},</if>
+            <if test="singleLine16 != null">single_line16 = #{singleLine16},</if>
+            <if test="singleLine17 != null">single_line17 = #{singleLine17},</if>
+            <if test="singleLine18 != null">single_line18 = #{singleLine18},</if>
+            <if test="singleLine19 != null">single_line19 = #{singleLine19},</if>
+            <if test="singleLine20 != null">single_line20 = #{singleLine20},</if>
+            <if test="note1 != null">note1 = #{note1},</if>
+            <if test="note2 != null">note2 = #{note2},</if>
+            <if test="note3 != null">note3 = #{note3},</if>
+            <if test="note4 != null">note4 = #{note4},</if>
+            <if test="note5 != null">note5 = #{note5},</if>
+            <if test="note6 != null">note6 = #{note6},</if>
+            <if test="note7 != null">note7 = #{note7},</if>
+            <if test="note8 != null">note8 = #{note8},</if>
+            <if test="note9 != null">note9 = #{note9},</if>
+            <if test="note10 != null">note10 = #{note10},</if>
+            <if test="note11 != null">note11 = #{note11},</if>
+            <if test="note12 != null">note12 = #{note12},</if>
+            <if test="note13 != null">note13 = #{note13},</if>
+            <if test="note14 != null">note14 = #{note14},</if>
+            <if test="note15 != null">note15 = #{note15},</if>
+            <if test="photo1 != null">photo1 = #{photo1},</if>
+            <if test="photo2 != null">photo2 = #{photo2},</if>
+            <if test="photo3 != null">photo3 = #{photo3},</if>
+            <if test="photo4 != null">photo4 = #{photo4},</if>
+            <if test="photo5 != null">photo5 = #{photo5},</if>
+            <if test="photo6 != null">photo6 = #{photo6},</if>
+            <if test="photo7 != null">photo7 = #{photo7},</if>
+            <if test="photo8 != null">photo8 = #{photo8},</if>
+            <if test="photo9 != null">photo9 = #{photo9},</if>
+            <if test="photo10 != null">photo10 = #{photo10},</if>
+            <if test="photo11 != null">photo11 = #{photo11},</if>
+            <if test="photo12 != null">photo12 = #{photo12},</if>
+            <if test="photo13 != null">photo13 = #{photo13},</if>
+            <if test="photo14 != null">photo14 = #{photo14},</if>
+            <if test="photo15 != null">photo15 = #{photo15},</if>
+            <if test="seoTitle != null">seo_title = #{seoTitle},</if>
+            <if test="seoKeywords != null">seo_keywords = #{seoKeywords},</if>
+            <if test="seoDescription != null">seo_description = #{seoDescription},</if>
+            <if test="media1 != null">media1 = #{media1},</if>
+            <if test="media2 != null">media2 = #{media2},</if>
+            <if test="media3 != null">media3 = #{media3},</if>
+            <if test="media4 != null">media4 = #{media4},</if>
+            <if test="file1 != null">file1 = #{file1},</if>
+            <if test="file2 != null">file2 = #{file2},</if>
+            <if test="file3 != null">file3 = #{file3},</if>
+            <if test="file4 != null">file4 = #{file4},</if>
+            <if test="content1 != null">content1 = #{content1},</if>
+            <if test="content2 != null">content2 = #{content2},</if>
+            <if test="content3 != null">content3 = #{content3},</if>
+            <if test="content4 != null">content4 = #{content4},</if>
+            <if test="content5 != null">content5 = #{content5},</if>
+            <if test="content6 != null">content6 = #{content6},</if>
+            published=0,
+            version=COALESCE(version, 0) + 1,
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <update id="assignDraftGroup">
+        UPDATE t_contents
+        <set>
+            <choose>
+                <when test="column != null">${column} = #{groupValue},</when>
+                <otherwise>extension_fields = #{record.extensionFields},</otherwise>
+            </choose>
+            public_search_text = #{record.publicSearchText},
+            version = COALESCE(version, 0) + 1
+        </set>
+        WHERE id = #{record.id} AND class_id = #{record.classid} AND deleted = 0
+          AND (site_project_id = #{siteId} OR site_project_id IS NULL)
+          AND status = 0 AND COALESCE(version, 0) = #{version}
+    </update>
+
+    <update id="updateArticleCommentCountById">
+        UPDATE
+        <include refid="BASE_TABLE"/>
+        SET comments_num = #{commentsNum, jdbcType=INTEGER}
+        WHERE id = #{id, jdbcType=INTEGER}
+    </update>
+    <!--首页置顶\首页推荐\频道页置顶\频道页推荐-->
+    <update id="updateElite">
+        UPDATE
+        <include refid="BASE_TABLE"/>
+        <set>
+            <if test="optionType==1">
+                index_top=1,
+            </if>
+            <if test="optionType==2">
+                index_top=0,
+            </if>
+            <if test="optionType==3">
+                index_hot=1,
+            </if>
+            <if test="optionType==4">
+                index_hot=0,
+            </if>
+            <if test="optionType==5">
+                index_elite=1,
+            </if>
+            <if test="optionType==6">
+                index_elite=0,
+            </if>
+            <if test="optionType==7">
+                channel_top=1,
+            </if>
+            <if test="optionType==8">
+                channel_top=0,
+            </if>
+            <if test="optionType==9">
+                channel_hot=1,
+            </if>
+            <if test="optionType==10">
+                channel_hot=0,
+            </if>
+            <if test="optionType==11">
+                channel_elite=1,
+            </if>
+            <if test="optionType==12">
+                channel_elite=0,
+            </if>
+            <if test="optionType==13">
+                menu_top=1,
+            </if>
+            <if test="optionType==14">
+                menu_top=0,
+            </if>
+            <if test="optionType==15">
+                menu_hot=1,
+            </if>
+            <if test="optionType==16">
+                menu_hot=0,
+            </if>
+            <if test="optionType==17">
+                menu_elite=1,
+            </if>
+            <if test="optionType==18">
+                menu_elite=0,
+            </if>
+            <if test="optionType==19">
+                nav_elite=1,
+            </if>
+            <if test="optionType==20">
+                nav_elite=0,
+            </if>
+            <if test="optionType==21">
+                right_elite=1,
+            </if>
+            <if test="optionType==22">
+                right_elite=0,
+            </if>
+            <if test="optionType==23">
+                left_elite=1,
+            </if>
+            <if test="optionType==24">
+                left_elite=0,
+            </if>
+            <if test="optionType==25">
+                status=1,
+            </if>
+            <if test="optionType==26">
+                status=0,
+            </if>
+            <if test="optionType==27">
+                deleted=1,delete_time=now(),
+            </if>
+            version=COALESCE(version, 0) + 1,
+        </set>
+        where id in
+        <foreach collection="ids" separator="," open="(" close=")" item="id" index="index">
+            #{id}
+        </foreach>
+        <if test="optionType==25 or optionType==26">
+            and status != 2
+        </if>
+        and class_id=#{classid} and deleted=0
+    </update>
+    <update id="updateSort">
+        update
+        <include refid="BASE_TABLE"/>
+        <set>
+            <if test="sort!=null">
+                sort=#{sort},
+                version=COALESCE(version, 0) + 1
+            </if>
+        </set>
+        <where>
+            id=#{id} and deleted=0
+        </where>
+    </update>
+    <update id="updateSEO">
+        update
+        <include refid="BASE_TABLE"/>
+        <set>
+            <if test="seoTitle!=null">
+                seo_title=#{seoTitle},
+            </if>
+            <if test="seoKeywords!=null">
+                seo_keywords=#{seoKeywords},
+            </if>
+            <if test="seoDescription!=null">
+                seo_description=#{seoDescription},
+            </if>
+            published=0,
+            version=COALESCE(version, 0) + 1
+        </set>
+        <where>
+            class_id=#{classid} and id=#{id} and deleted=0
+        </where>
+    </update>
+    <update id="updateDeleted">
+        update
+        <include refid="BASE_TABLE"/>
+        set deleted=1,delete_time=now()
+        <where>
+            id=#{id}
+        </where>
+    </update>
+    <update id="deleteAiInsertedContentIfUnchanged" parameterType="com.xinhongru.entity.ContentEntity">
+        update
+        <include refid="BASE_TABLE"/>
+        set deleted=1,delete_time=now()
+        where id=#{id}
+          and deleted=0
+        <choose><when test="classid != null">and class_id=#{classid}</when><otherwise>and class_id is null</otherwise></choose>
+        <choose><when test="title != null">and title=#{title}</when><otherwise>and title is null</otherwise></choose>
+        <choose><when test="createTime != null">and create_time=#{createTime}</when><otherwise>and create_time is null</otherwise></choose>
+        <choose><when test="beginTime != null">and begin_time=#{beginTime}</when><otherwise>and begin_time is null</otherwise></choose>
+        <choose><when test="endTime != null">and end_time=#{endTime}</when><otherwise>and end_time is null</otherwise></choose>
+        <choose><when test="entryIntoForceTime != null">and entry_into_force_time=#{entryIntoForceTime}</when><otherwise>and entry_into_force_time is null</otherwise></choose>
+        <choose><when test="expirationTime != null">and expiration_time=#{expirationTime}</when><otherwise>and expiration_time is null</otherwise></choose>
+        <choose><when test="status != null">and status=#{status}</when><otherwise>and status is null</otherwise></choose>
+        <choose><when test="tags != null">and tags=#{tags}</when><otherwise>and tags is null</otherwise></choose>
+        <choose><when test="hits != null">and hits=#{hits}</when><otherwise>and hits is null</otherwise></choose>
+        <choose><when test="sort != null">and sort=#{sort}</when><otherwise>and sort is null</otherwise></choose>
+        <choose><when test="xgid != null">and xgid=#{xgid}</when><otherwise>and xgid is null</otherwise></choose>
+        <choose><when test="indexTop != null">and index_top=#{indexTop}</when><otherwise>and index_top is null</otherwise></choose>
+        <choose><when test="indexElite != null">and index_elite=#{indexElite}</when><otherwise>and index_elite is null</otherwise></choose>
+        <choose><when test="indexHot != null">and index_hot=#{indexHot}</when><otherwise>and index_hot is null</otherwise></choose>
+        <choose><when test="menuTop != null">and menu_top=#{menuTop}</when><otherwise>and menu_top is null</otherwise></choose>
+        <choose><when test="menuElite != null">and menu_elite=#{menuElite}</when><otherwise>and menu_elite is null</otherwise></choose>
+        <choose><when test="menuHot != null">and menu_hot=#{menuHot}</when><otherwise>and menu_hot is null</otherwise></choose>
+        <choose><when test="channelTop != null">and channel_top=#{channelTop}</when><otherwise>and channel_top is null</otherwise></choose>
+        <choose><when test="channelElite != null">and channel_elite=#{channelElite}</when><otherwise>and channel_elite is null</otherwise></choose>
+        <choose><when test="channelHot != null">and channel_hot=#{channelHot}</when><otherwise>and channel_hot is null</otherwise></choose>
+        <choose><when test="navElite != null">and nav_elite=#{navElite}</when><otherwise>and nav_elite is null</otherwise></choose>
+        <choose><when test="rightElite != null">and right_elite=#{rightElite}</when><otherwise>and right_elite is null</otherwise></choose>
+        <choose><when test="leftElite != null">and left_elite=#{leftElite}</when><otherwise>and left_elite is null</otherwise></choose>
+        <choose><when test="content1 != null">and content1=#{content1}</when><otherwise>and content1 is null</otherwise></choose>
+        <choose><when test="content2 != null">and content2=#{content2}</when><otherwise>and content2 is null</otherwise></choose>
+        <choose><when test="content3 != null">and content3=#{content3}</when><otherwise>and content3 is null</otherwise></choose>
+        <choose><when test="content4 != null">and content4=#{content4}</when><otherwise>and content4 is null</otherwise></choose>
+        <choose><when test="content5 != null">and content5=#{content5}</when><otherwise>and content5 is null</otherwise></choose>
+        <choose><when test="content6 != null">and content6=#{content6}</when><otherwise>and content6 is null</otherwise></choose>
+        <choose><when test="singleLine1 != null">and single_line1=#{singleLine1}</when><otherwise>and single_line1 is null</otherwise></choose>
+        <choose><when test="singleLine2 != null">and single_line2=#{singleLine2}</when><otherwise>and single_line2 is null</otherwise></choose>
+        <choose><when test="singleLine3 != null">and single_line3=#{singleLine3}</when><otherwise>and single_line3 is null</otherwise></choose>
+        <choose><when test="singleLine4 != null">and single_line4=#{singleLine4}</when><otherwise>and single_line4 is null</otherwise></choose>
+        <choose><when test="singleLine5 != null">and single_line5=#{singleLine5}</when><otherwise>and single_line5 is null</otherwise></choose>
+        <choose><when test="singleLine6 != null">and single_line6=#{singleLine6}</when><otherwise>and single_line6 is null</otherwise></choose>
+        <choose><when test="singleLine7 != null">and single_line7=#{singleLine7}</when><otherwise>and single_line7 is null</otherwise></choose>
+        <choose><when test="singleLine8 != null">and single_line8=#{singleLine8}</when><otherwise>and single_line8 is null</otherwise></choose>
+        <choose><when test="singleLine9 != null">and single_line9=#{singleLine9}</when><otherwise>and single_line9 is null</otherwise></choose>
+        <choose><when test="singleLine10 != null">and single_line10=#{singleLine10}</when><otherwise>and single_line10 is null</otherwise></choose>
+        <choose><when test="singleLine11 != null">and single_line11=#{singleLine11}</when><otherwise>and single_line11 is null</otherwise></choose>
+        <choose><when test="singleLine12 != null">and single_line12=#{singleLine12}</when><otherwise>and single_line12 is null</otherwise></choose>
+        <choose><when test="singleLine13 != null">and single_line13=#{singleLine13}</when><otherwise>and single_line13 is null</otherwise></choose>
+        <choose><when test="singleLine14 != null">and single_line14=#{singleLine14}</when><otherwise>and single_line14 is null</otherwise></choose>
+        <choose><when test="singleLine15 != null">and single_line15=#{singleLine15}</when><otherwise>and single_line15 is null</otherwise></choose>
+        <choose><when test="singleLine16 != null">and single_line16=#{singleLine16}</when><otherwise>and single_line16 is null</otherwise></choose>
+        <choose><when test="singleLine17 != null">and single_line17=#{singleLine17}</when><otherwise>and single_line17 is null</otherwise></choose>
+        <choose><when test="singleLine18 != null">and single_line18=#{singleLine18}</when><otherwise>and single_line18 is null</otherwise></choose>
+        <choose><when test="singleLine19 != null">and single_line19=#{singleLine19}</when><otherwise>and single_line19 is null</otherwise></choose>
+        <choose><when test="singleLine20 != null">and single_line20=#{singleLine20}</when><otherwise>and single_line20 is null</otherwise></choose>
+        <choose><when test="note1 != null">and note1=#{note1}</when><otherwise>and note1 is null</otherwise></choose>
+        <choose><when test="note2 != null">and note2=#{note2}</when><otherwise>and note2 is null</otherwise></choose>
+        <choose><when test="note3 != null">and note3=#{note3}</when><otherwise>and note3 is null</otherwise></choose>
+        <choose><when test="note4 != null">and note4=#{note4}</when><otherwise>and note4 is null</otherwise></choose>
+        <choose><when test="note5 != null">and note5=#{note5}</when><otherwise>and note5 is null</otherwise></choose>
+        <choose><when test="note6 != null">and note6=#{note6}</when><otherwise>and note6 is null</otherwise></choose>
+        <choose><when test="note7 != null">and note7=#{note7}</when><otherwise>and note7 is null</otherwise></choose>
+        <choose><when test="note8 != null">and note8=#{note8}</when><otherwise>and note8 is null</otherwise></choose>
+        <choose><when test="note9 != null">and note9=#{note9}</when><otherwise>and note9 is null</otherwise></choose>
+        <choose><when test="note10 != null">and note10=#{note10}</when><otherwise>and note10 is null</otherwise></choose>
+        <choose><when test="note11 != null">and note11=#{note11}</when><otherwise>and note11 is null</otherwise></choose>
+        <choose><when test="note12 != null">and note12=#{note12}</when><otherwise>and note12 is null</otherwise></choose>
+        <choose><when test="note13 != null">and note13=#{note13}</when><otherwise>and note13 is null</otherwise></choose>
+        <choose><when test="note14 != null">and note14=#{note14}</when><otherwise>and note14 is null</otherwise></choose>
+        <choose><when test="note15 != null">and note15=#{note15}</when><otherwise>and note15 is null</otherwise></choose>
+        <choose><when test="photo1 != null">and photo1=#{photo1}</when><otherwise>and photo1 is null</otherwise></choose>
+        <choose><when test="photo2 != null">and photo2=#{photo2}</when><otherwise>and photo2 is null</otherwise></choose>
+        <choose><when test="photo3 != null">and photo3=#{photo3}</when><otherwise>and photo3 is null</otherwise></choose>
+        <choose><when test="photo4 != null">and photo4=#{photo4}</when><otherwise>and photo4 is null</otherwise></choose>
+        <choose><when test="photo5 != null">and photo5=#{photo5}</when><otherwise>and photo5 is null</otherwise></choose>
+        <choose><when test="photo6 != null">and photo6=#{photo6}</when><otherwise>and photo6 is null</otherwise></choose>
+        <choose><when test="photo7 != null">and photo7=#{photo7}</when><otherwise>and photo7 is null</otherwise></choose>
+        <choose><when test="photo8 != null">and photo8=#{photo8}</when><otherwise>and photo8 is null</otherwise></choose>
+        <choose><when test="photo9 != null">and photo9=#{photo9}</when><otherwise>and photo9 is null</otherwise></choose>
+        <choose><when test="photo10 != null">and photo10=#{photo10}</when><otherwise>and photo10 is null</otherwise></choose>
+        <choose><when test="photo11 != null">and photo11=#{photo11}</when><otherwise>and photo11 is null</otherwise></choose>
+        <choose><when test="photo12 != null">and photo12=#{photo12}</when><otherwise>and photo12 is null</otherwise></choose>
+        <choose><when test="photo13 != null">and photo13=#{photo13}</when><otherwise>and photo13 is null</otherwise></choose>
+        <choose><when test="photo14 != null">and photo14=#{photo14}</when><otherwise>and photo14 is null</otherwise></choose>
+        <choose><when test="photo15 != null">and photo15=#{photo15}</when><otherwise>and photo15 is null</otherwise></choose>
+        <choose><when test="seoTitle != null">and seo_title=#{seoTitle}</when><otherwise>and seo_title is null</otherwise></choose>
+        <choose><when test="seoKeywords != null">and seo_keywords=#{seoKeywords}</when><otherwise>and seo_keywords is null</otherwise></choose>
+        <choose><when test="seoDescription != null">and seo_description=#{seoDescription}</when><otherwise>and seo_description is null</otherwise></choose>
+        <choose><when test="file1 != null">and file1=#{file1}</when><otherwise>and file1 is null</otherwise></choose>
+        <choose><when test="file2 != null">and file2=#{file2}</when><otherwise>and file2 is null</otherwise></choose>
+        <choose><when test="file3 != null">and file3=#{file3}</when><otherwise>and file3 is null</otherwise></choose>
+        <choose><when test="file4 != null">and file4=#{file4}</when><otherwise>and file4 is null</otherwise></choose>
+        <choose><when test="media1 != null">and media1=#{media1}</when><otherwise>and media1 is null</otherwise></choose>
+        <choose><when test="media2 != null">and media2=#{media2}</when><otherwise>and media2 is null</otherwise></choose>
+        <choose><when test="media3 != null">and media3=#{media3}</when><otherwise>and media3 is null</otherwise></choose>
+        <choose><when test="media4 != null">and media4=#{media4}</when><otherwise>and media4 is null</otherwise></choose>
+    </update>
+    <update id="updatePublished">
+        update
+        <include refid="BASE_TABLE"/>
+        set published=1
+        where id=#{id} and class_id=#{classId}
+    </update>
+
+
+    <!-- 根据主键编号获取文章信息 -->
+    <select id="getArticleById" resultType="com.xinhongru.entity.ContentEntity">
+        SELECT
+        *
+        FROM
+        <include refid="BASE_TABLE"/>
+        AS c
+        WHERE c.id = #{id, jdbcType=INTEGER}
+        LIMIT 1
+    </select>
+    <select id="selectPublishedArticleClassId" resultType="java.lang.Integer">
+        SELECT c.class_id FROM t_contents c JOIN t_oneshot m ON m.id = c.class_id
+        WHERE c.id = #{contentId} AND m.site_project_id = #{siteId} AND m.deleted = 0
+          AND (c.site_project_id = #{siteId} OR c.site_project_id IS NULL)
+          AND c.deleted = 0 AND c.status = 1
+          AND c.entry_into_force_time &lt;= now()
+          AND c.expiration_time &gt;= now()
+        LIMIT 1
+    </select>
+    <select id="selectPublicTimelineRows" resultType="com.xinhongru.entity.ContentEntity">
+        SELECT c.id, c.class_id AS classid, c.site_project_id, c.status, c.title, c.extension_fields,
+               c.single_line1,c.single_line2,c.single_line3,c.single_line4,c.single_line5,
+               c.single_line6,c.single_line7,c.single_line8,c.single_line9,c.single_line10,
+               c.single_line11,c.single_line12,c.single_line13,c.single_line14,c.single_line15,
+               c.single_line16,c.single_line17,c.single_line18,c.single_line19,c.single_line20,
+               c.note1,c.note2,c.note3,c.note4,c.note5,c.note6,c.note7,c.note8,c.note9,c.note10,
+               c.note11,c.note12,c.note13,c.note14,c.note15,
+               c.photo1,c.photo2,c.photo3,c.photo4,c.photo5,c.photo6,c.photo7,c.photo8,
+               c.photo9,c.photo10,c.photo11,c.photo12,c.photo13,c.photo14,c.photo15
+        FROM t_contents c JOIN t_oneshot m ON m.id = c.class_id
+        WHERE m.site_project_id = #{siteId} AND m.deleted = 0 AND c.class_id = #{menuId}
+          AND (c.site_project_id = #{siteId} OR c.site_project_id IS NULL)
+          AND c.deleted = 0 AND c.status = 1
+          AND c.entry_into_force_time &lt;= CURRENT_TIMESTAMP AND c.expiration_time &gt;= CURRENT_TIMESTAMP
+        ORDER BY c.sort DESC, c.create_time DESC, c.id DESC
+    </select>
+    <select id="getActiveArticleById" resultType="com.xinhongru.entity.ContentEntity">
+        SELECT
+        *
+        FROM
+        <include refid="BASE_TABLE"/>
+        AS c
+        WHERE c.id = #{id, jdbcType=INTEGER}
+          AND c.deleted = 0
+        LIMIT 1
+    </select>
+    <select id="selectAiContentAuditExtraColumns" resultType="java.util.LinkedHashMap">
+        SELECT
+        published,
+        deleted,
+        delete_time
+        FROM
+        <include refid="BASE_TABLE"/>
+        WHERE id = #{id, jdbcType=INTEGER}
+        LIMIT 1
+    </select>
+
+    <!-- 根据条件查询文章 -->
+    <sql id="ExtensionNumericCriterionDigits">(JSON_TYPE(JSON_EXTRACT(extension_fields,CONCAT('$.',#{c.extensionKey}))) = 'STRING' AND CHAR_LENGTH(JSON_UNQUOTE(JSON_EXTRACT(extension_fields,CONCAT('$.',#{c.extensionKey})))) &gt; 0 AND NOT REGEXP_LIKE(CONVERT(JSON_UNQUOTE(JSON_EXTRACT(extension_fields,CONCAT('$.',#{c.extensionKey}))) USING utf8mb4), '[^0-9]', 'c'))</sql>
+    <sql id="ExtensionNumericCriterionValue">CASE WHEN <include refid="ExtensionNumericCriterionDigits"/> AND CHAR_LENGTH(TRIM(LEADING '0' FROM JSON_UNQUOTE(JSON_EXTRACT(extension_fields,CONCAT('$.',#{c.extensionKey}))))) &lt;= 65 THEN CAST(COALESCE(NULLIF(TRIM(LEADING '0' FROM JSON_UNQUOTE(JSON_EXTRACT(extension_fields,CONCAT('$.',#{c.extensionKey})))),''),'0') AS DECIMAL(65,0)) ELSE NULL END</sql>
+    <sql id="ExtensionNumericCriterionEmpty">(JSON_EXTRACT(extension_fields,CONCAT('$.',#{c.extensionKey})) IS NULL OR JSON_TYPE(JSON_EXTRACT(extension_fields,CONCAT('$.',#{c.extensionKey}))) = 'NULL' OR (JSON_TYPE(JSON_EXTRACT(extension_fields,CONCAT('$.',#{c.extensionKey}))) = 'STRING' AND OCTET_LENGTH(JSON_UNQUOTE(JSON_EXTRACT(extension_fields,CONCAT('$.',#{c.extensionKey})))) = 0))</sql>
+    <sql id="ExtensionNumericSortDigits">(JSON_TYPE(JSON_EXTRACT(extension_fields,#{contentCond.extensionSortPath})) = 'STRING' AND CHAR_LENGTH(JSON_UNQUOTE(JSON_EXTRACT(extension_fields,#{contentCond.extensionSortPath}))) &gt; 0 AND NOT REGEXP_LIKE(CONVERT(JSON_UNQUOTE(JSON_EXTRACT(extension_fields,#{contentCond.extensionSortPath})) USING utf8mb4), '[^0-9]', 'c'))</sql>
+    <sql id="ExtensionNumericSortValue">CASE WHEN <include refid="ExtensionNumericSortDigits"/> AND CHAR_LENGTH(TRIM(LEADING '0' FROM JSON_UNQUOTE(JSON_EXTRACT(extension_fields,#{contentCond.extensionSortPath})))) &lt;= 65 THEN CAST(COALESCE(NULLIF(TRIM(LEADING '0' FROM JSON_UNQUOTE(JSON_EXTRACT(extension_fields,#{contentCond.extensionSortPath}))),''),'0') AS DECIMAL(65,0)) ELSE NULL END</sql>
+    <sql id="ExtensionNumericSortEmpty">(JSON_EXTRACT(extension_fields,#{contentCond.extensionSortPath}) IS NULL OR JSON_TYPE(JSON_EXTRACT(extension_fields,#{contentCond.extensionSortPath})) = 'NULL' OR (JSON_TYPE(JSON_EXTRACT(extension_fields,#{contentCond.extensionSortPath})) = 'STRING' AND OCTET_LENGTH(JSON_UNQUOTE(JSON_EXTRACT(extension_fields,#{contentCond.extensionSortPath}))) = 0))</sql>
+    <sql id="ExtensionCriterionValue">CASE WHEN JSON_TYPE(JSON_EXTRACT(extension_fields,CONCAT('$.',#{c.extensionKey}))) = 'STRING' THEN NULLIF(BINARY JSON_UNQUOTE(JSON_EXTRACT(extension_fields,CONCAT('$.',#{c.extensionKey}))), BINARY '') ELSE NULL END</sql>
+    <sql id="ExtensionSortValue">CASE WHEN JSON_TYPE(JSON_EXTRACT(extension_fields,#{contentCond.extensionSortPath})) = 'STRING' THEN NULLIF(BINARY JSON_UNQUOTE(JSON_EXTRACT(extension_fields,#{contentCond.extensionSortPath})), BINARY '') ELSE NULL END</sql>
+    <sql id="NativeContentGroupValue">
+        COALESCE(REGEXP_REPLACE(CONVERT(
+            <choose>
+                <when test="c.extensionKey != null"><include refid="ExtensionCriterionValue"/></when>
+                <otherwise>${c.column}</otherwise>
+            </choose>
+        USING utf8mb4), '^[[:space:]]+|[[:space:]]+$', ''), '') COLLATE utf8mb4_bin
+    </sql>
+    <select id="selectNativeContentGroups" resultType="com.xinhongru.mapper.ContentMapper$NativeContentGroup">
+        SELECT grouped.group_value AS value, COUNT(*) AS count
+        FROM (
+            SELECT <include refid="NativeContentGroupValue"/> AS group_value
+            FROM t_contents
+            WHERE class_id = #{menuId} AND deleted = 0
+              AND (t_contents.site_project_id = #{siteId} OR t_contents.site_project_id IS NULL)
+              AND EXISTS (SELECT 1 FROM t_oneshot query_scope_menu
+                  WHERE query_scope_menu.id = t_contents.class_id
+                    AND query_scope_menu.site_project_id = #{siteId} AND query_scope_menu.deleted = 0)
+        ) grouped
+        GROUP BY grouped.group_value
+        ORDER BY grouped.group_value DESC
+    </select>
+    <sql id="ConfiguredContentCriteria">
+        <if test="contentCond.publishedTemplateQuery">
+            AND status = 1
+            AND entry_into_force_time &lt;= now()
+            AND expiration_time &gt;= now()
+        </if>
+            <if test="criteria != null and criteria.size() > 0">
+                <foreach collection="criteria" item="c" separator=" ">
+                    <choose>
+                        <when test="c.op == 'groupExact'">AND BINARY (<include refid="NativeContentGroupValue"/>) = BINARY #{c.value}</when>
+                        <when test="c.extensionKey != null">
+                            <choose>
+                                <when test="c.numeric">
+                                    <choose>
+                                        <when test="c.op == 'empty'">AND <include refid="ExtensionNumericCriterionEmpty"/></when>
+                                        <when test="c.op == 'notEmpty'">AND NOT <include refid="ExtensionNumericCriterionEmpty"/></when>
+                                        <when test="c.op == 'eq'">AND (<include refid="ExtensionNumericCriterionValue"/>) = CAST(#{c.value} AS DECIMAL(65,0))</when>
+                                        <when test="c.op == 'ge'">AND (<include refid="ExtensionNumericCriterionValue"/>) &gt;= CAST(#{c.value} AS DECIMAL(65,0))</when>
+                                        <when test="c.op == 'le'">AND (<include refid="ExtensionNumericCriterionValue"/>) &lt;= CAST(#{c.value} AS DECIMAL(65,0))</when>
+                                        <when test="c.op == 'gt'">AND (<include refid="ExtensionNumericCriterionValue"/>) &gt; CAST(#{c.value} AS DECIMAL(65,0))</when>
+                                        <when test="c.op == 'lt'">AND (<include refid="ExtensionNumericCriterionValue"/>) &lt; CAST(#{c.value} AS DECIMAL(65,0))</when>
+                                    </choose>
+                                </when>
+                                <when test="c.op == 'empty'">AND <include refid="ExtensionCriterionValue"/> IS NULL</when>
+                                <when test="c.op == 'notEmpty'">AND <include refid="ExtensionCriterionValue"/> IS NOT NULL</when>
+                                <when test="c.op == 'contains'">AND LOCATE(BINARY #{c.value}, BINARY (<include refid="ExtensionCriterionValue"/>)) &gt; 0</when>
+                                <when test="c.op == 'eq'">AND BINARY (<include refid="ExtensionCriterionValue"/>) = BINARY #{c.value}</when>
+                                <when test="c.op == 'ge'">AND <include refid="ExtensionCriterionValue"/> &gt;= #{c.value}</when>
+                                <when test="c.op == 'le'">AND <include refid="ExtensionCriterionValue"/> &lt;= #{c.value}</when>
+                                <when test="c.op == 'any'">AND (<foreach collection="c.values" item="v" separator=" OR ">LOCATE(BINARY CONCAT(',',#{v},','), BINARY (<include refid="ExtensionCriterionValue"/>)) &gt; 0</foreach>)</when>
+                                <when test="c.op == 'all'">AND (<foreach collection="c.values" item="v" separator=" AND ">LOCATE(BINARY CONCAT(',',#{v},','), BINARY (<include refid="ExtensionCriterionValue"/>)) &gt; 0</foreach>)</when>
+                            </choose>
+                        </when>
+                        <when test="c.op == 'like'">AND ${c.column} LIKE CONCAT('%',#{c.value},'%')</when>
+                        <when test="c.op == 'eq'">AND ${c.column} = #{c.value}</when>
+                        <when test="c.op == 'ge'">AND ${c.column} &gt;= #{c.value}</when>
+                        <when test="c.op == 'le'">AND ${c.column} &lt;= #{c.value}</when>
+                        <when test="c.op == 'multiLike'">
+                            AND (
+                            <foreach collection="c.values" item="v" separator=" OR ">
+                                ${c.column} LIKE CONCAT('%,',#{v},',%')
+                            </foreach>
+                            )
+                        </when>
+                    </choose>
+                </foreach>
+            </if>
+        <if test="contentCond.siteProjectId != null">
+            AND (t_contents.site_project_id = #{contentCond.siteProjectId} OR t_contents.site_project_id IS NULL)
+            AND EXISTS (SELECT 1 FROM t_oneshot query_scope_menu
+                WHERE query_scope_menu.id = t_contents.class_id
+                  AND query_scope_menu.site_project_id = #{contentCond.siteProjectId}
+                  AND query_scope_menu.deleted = 0
+                  <if test="contentCond.publishedTemplateQuery">AND query_scope_menu.has_front_channel = 1</if>)
+        </if>
+    </sql>
+    <select id="getArticlesByCond" resultType="com.xinhongru.entity.ContentEntity"
+            parameterType="com.xinhongru.dto.cond.ContentCond">
+        SELECT
+        id,class_id,status,xgid,sort,hits,index_top,index_elite,index_hot,menu_top,menu_elite,menu_hot,channel_top,channel_elite,channel_hot,nav_elite,right_elite,left_elite,
+        <if test="contentCond.includeRowVersion">version,</if>
+        <foreach collection="fieldNameList" separator="," item="fieldName">
+            ${fieldName}
+        </foreach>
+        FROM
+        <include refid="BASE_TABLE"/>
+        <where>
+            <if test="contentCond.seedIds != null">
+                AND id IN
+                <foreach collection="contentCond.seedIds" item="seedId" open="(" separator="," close=")">
+                    #{seedId}
+                </foreach>
+            </if>
+            <if test="contentCond.tags!=null">
+                AND tags LIKE CONCAT('%',#{contentCond.tags, jdbcType=VARCHAR},'%')
+            </if>
+
+            <if test="contentCond.statusList != null and contentCond.statusList.size() > 0">
+                AND status IN
+                <foreach collection="contentCond.statusList" item="s" open="(" separator="," close=")">#{s}</foreach>
+            </if>
+            <if test="contentCond.statusList == null or contentCond.statusList.size() == 0">
+                <if test="contentCond.status != null">
+                    AND status = #{contentCond.status, jdbcType=INTEGER}
+                </if>
+            </if>
+            <if test="contentCond.indexTop != null">
+                AND index_top = #{contentCond.indexTop, jdbcType=INTEGER}
+            </if>
+            <if test="contentCond.indexHot != null">
+                AND index_hot = #{contentCond.indexHot, jdbcType=INTEGER}
+            </if>
+            <if test="contentCond.indexElite != null">
+                AND index_elite = #{contentCond.indexElite, jdbcType=INTEGER}
+            </if>
+            <if test="contentCond.channelTop != null">
+                AND channel_top = #{contentCond.channelTop, jdbcType=INTEGER}
+            </if>
+            <if test="contentCond.channelHot != null">
+                AND channel_hot = #{contentCond.channelHot, jdbcType=INTEGER}
+            </if>
+            <if test="contentCond.channelElite != null">
+                AND channel_elite = #{contentCond.channelElite, jdbcType=INTEGER}
+            </if>
+            <if test="contentCond.menuTop != null">
+                AND menu_top = #{contentCond.menuTop, jdbcType=INTEGER}
+            </if>
+            <if test="contentCond.menuHot != null">
+                AND menu_hot = #{contentCond.menuHot, jdbcType=INTEGER}
+            </if>
+            <if test="contentCond.menuElite != null">
+                AND menu_elite = #{contentCond.menuElite, jdbcType=INTEGER}
+            </if>
+            <if test="contentCond.navElite != null">
+                AND nav_elite = #{contentCond.navElite, jdbcType=INTEGER}
+            </if>
+            <if test="contentCond.rightElite != null">
+                AND right_elite = #{contentCond.rightElite, jdbcType=INTEGER}
+            </if>
+            <if test="contentCond.leftElite != null">
+                AND left_elite = #{contentCond.leftElite, jdbcType=INTEGER}
+            </if>
+            <if test="contentCond.title != null">
+                AND title LIKE CONCAT('%',#{contentCond.title, jdbcType=VARCHAR},'%')
+            </if>
+            <if test="contentCond.startTime_createTime != null">
+                AND create_time &gt;= #{contentCond.startTime_createTime, jdbcType=VARCHAR}
+            </if>
+            <if test="contentCond.endTime_createTime != null">
+                AND create_time &lt;= #{contentCond.endTime_createTime, jdbcType=VARCHAR}
+            </if>
+            <if test="contentCond.classid != null">
+                AND class_id =#{contentCond.classid,jdbcType=INTEGER}
+            </if>
+            <if test="contentCond.xgid != null">
+                AND xgid =#{contentCond.xgid,jdbcType=INTEGER}
+            </if>
+            <if test="contentCond.singleLine1!=null">
+                AND single_line1 LIKE CONCAT('%',#{contentCond.singleLine1, jdbcType=VARCHAR},'%')
+            </if>
+            <if test="contentCond.singleLine2!=null">
+                AND single_line2 LIKE CONCAT('%',#{contentCond.singleLine2, jdbcType=VARCHAR},'%')
+            </if>
+            <if test="contentCond.singleLine3!=null">
+                AND single_line3 LIKE CONCAT('%',#{contentCond.singleLine3, jdbcType=VARCHAR},'%')
+            </if>
+            <if test="contentCond.singleLine4!=null">
+                AND single_line4 LIKE CONCAT('%',#{contentCond.singleLine4, jdbcType=VARCHAR},'%')
+            </if>
+            <if test="contentCond.singleLine5!=null">
+                AND single_line5 LIKE CONCAT('%',#{contentCond.singleLine5, jdbcType=VARCHAR},'%')
+            </if>
+            <if test="contentCond.singleLine6!=null">
+                AND single_line6 LIKE CONCAT('%',#{contentCond.singleLine6, jdbcType=VARCHAR},'%')
+            </if>
+            <if test="contentCond.singleLine7!=null">
+                AND single_line7 LIKE CONCAT('%',#{contentCond.singleLine7, jdbcType=VARCHAR},'%')
+            </if>
+            <if test="contentCond.singleLine8!=null">
+                AND single_line8 LIKE CONCAT('%',#{contentCond.singleLine8, jdbcType=VARCHAR},'%')
+            </if>
+            <if test="contentCond.singleLine9!=null">
+                AND single_line9 LIKE CONCAT('%',#{contentCond.singleLine9, jdbcType=VARCHAR},'%')
+            </if>
+            <if test="contentCond.singleLine10!=null">
+                AND single_line10 LIKE CONCAT('%',#{contentCond.singleLine10, jdbcType=VARCHAR},'%')
+            </if>
+            <if test="contentCond.singleLine11!=null">
+                AND single_line11 LIKE CONCAT('%',#{contentCond.singleLine11, jdbcType=VARCHAR},'%')
+            </if>
+            <if test="contentCond.singleLine12!=null">
+                AND single_line12 LIKE CONCAT('%',#{contentCond.singleLine12, jdbcType=VARCHAR},'%')
+            </if>
+            <if test="contentCond.singleLine13!=null">
+                AND single_line13 LIKE CONCAT('%',#{contentCond.singleLine13, jdbcType=VARCHAR},'%')
+            </if>
+            <if test="contentCond.singleLine14!=null">
+                AND single_line14 LIKE CONCAT('%',#{contentCond.singleLine14, jdbcType=VARCHAR},'%')
+            </if>
+            <if test="contentCond.singleLine15!=null">
+                AND single_line15 LIKE CONCAT('%',#{contentCond.singleLine15, jdbcType=VARCHAR},'%')
+            </if>
+            <if test="contentCond.singleLine16!=null">
+                AND single_line16 LIKE CONCAT('%',#{contentCond.singleLine16, jdbcType=VARCHAR},'%')
+            </if>
+            <if test="contentCond.singleLine17!=null">
+                AND single_line17 LIKE CONCAT('%',#{contentCond.singleLine17, jdbcType=VARCHAR},'%')
+            </if>
+            <if test="contentCond.singleLine18!=null">
+                AND single_line18 LIKE CONCAT('%',#{contentCond.singleLine18, jdbcType=VARCHAR},'%')
+            </if>
+            <if test="contentCond.singleLine19!=null">
+                AND single_line19 LIKE CONCAT('%',#{contentCond.singleLine19, jdbcType=VARCHAR},'%')
+            </if>
+            <if test="contentCond.singleLine20!=null">
+                AND single_line20 LIKE CONCAT('%',#{contentCond.singleLine20, jdbcType=VARCHAR},'%')
+            </if>
+            <if test="contentCond.note1!=null">
+                AND note1 LIKE CONCAT('%',#{contentCond.note1, jdbcType=VARCHAR},'%')
+            </if>
+            <if test="contentCond.note2!=null">
+                AND note2 LIKE CONCAT('%',#{contentCond.note2, jdbcType=VARCHAR},'%')
+            </if>
+            <if test="contentCond.note3!=null">
+                AND note3 LIKE CONCAT('%',#{contentCond.note3, jdbcType=VARCHAR},'%')
+            </if>
+            <if test="contentCond.note4!=null">
+                AND note4 LIKE CONCAT('%',#{contentCond.note4, jdbcType=VARCHAR},'%')
+            </if>
+            <if test="contentCond.note5!=null">
+                AND note5 LIKE CONCAT('%',#{contentCond.note5, jdbcType=VARCHAR},'%')
+            </if>
+            <if test="contentCond.note6!=null">
+                AND note6 LIKE CONCAT('%',#{contentCond.note6, jdbcType=VARCHAR},'%')
+            </if>
+            <if test="contentCond.note7!=null">
+                AND note7 LIKE CONCAT('%',#{contentCond.note7, jdbcType=VARCHAR},'%')
+            </if>
+            <if test="contentCond.note8!=null">
+                AND note8 LIKE CONCAT('%',#{contentCond.note8, jdbcType=VARCHAR},'%')
+            </if>
+            <if test="contentCond.note9!=null">
+                AND note9 LIKE CONCAT('%',#{contentCond.note9, jdbcType=VARCHAR},'%')
+            </if>
+            <if test="contentCond.note10!=null">
+                AND note10 LIKE CONCAT('%',#{contentCond.note10, jdbcType=VARCHAR},'%')
+            </if>
+            <if test="contentCond.note11!=null">
+                AND note11 LIKE CONCAT('%',#{contentCond.note11, jdbcType=VARCHAR},'%')
+            </if>
+            <if test="contentCond.note12!=null">
+                AND note12 LIKE CONCAT('%',#{contentCond.note12, jdbcType=VARCHAR},'%')
+            </if>
+            <if test="contentCond.note13!=null">
+                AND note13 LIKE CONCAT('%',#{contentCond.note13, jdbcType=VARCHAR},'%')
+            </if>
+            <if test="contentCond.note14!=null">
+                AND note14 LIKE CONCAT('%',#{contentCond.note14, jdbcType=VARCHAR},'%')
+            </if>
+            <if test="contentCond.note15!=null">
+                AND note15 LIKE CONCAT('%',#{contentCond.note15, jdbcType=VARCHAR},'%')
+            </if>
+            <if test="contentCond.content1!=null">
+                AND content1 LIKE CONCAT('%',#{contentCond.content1, jdbcType=VARCHAR},'%')
+            </if>
+            <if test="contentCond.content2!=null">
+                AND content2 LIKE CONCAT('%',#{contentCond.content2, jdbcType=VARCHAR},'%')
+            </if>
+            <if test="contentCond.content3!=null">
+                AND content3 LIKE CONCAT('%',#{contentCond.content3, jdbcType=VARCHAR},'%')
+            </if>
+            <if test="contentCond.content4!=null">
+                AND content4 LIKE CONCAT('%',#{contentCond.content4, jdbcType=VARCHAR},'%')
+            </if>
+            <if test="contentCond.content5!=null">
+                AND content5 LIKE CONCAT('%',#{contentCond.content5, jdbcType=VARCHAR},'%')
+            </if>
+            <if test="contentCond.content6!=null">
+                AND content6 LIKE CONCAT('%',#{contentCond.content6, jdbcType=VARCHAR},'%')
+            </if>
+            <include refid="ConfiguredContentCriteria"/>
+            and deleted=0
+        </where>
+        <choose>
+            <when test="contentCond.extensionSortKey != null and contentCond.extensionSortNumeric">ORDER BY CASE WHEN (<include refid="ExtensionNumericSortValue"/>) IS NOT NULL THEN 0 WHEN <include refid="ExtensionNumericSortEmpty"/> THEN 3 WHEN <include refid="ExtensionNumericSortDigits"/> THEN 1 ELSE 2 END ASC, (<include refid="ExtensionNumericSortValue"/>) <choose><when test="contentCond.extensionSortDescending">DESC</when><otherwise>ASC</otherwise></choose>, id DESC</when>
+            <when test="contentCond.extensionSortKey != null">ORDER BY (<include refid="ExtensionSortValue"/>) IS NULL ASC, BINARY (<include refid="ExtensionSortValue"/>) <choose><when test="contentCond.extensionSortDescending">DESC</when><otherwise>ASC</otherwise></choose>, id DESC</when>
+            <otherwise>ORDER BY sort desc,create_time DESC,id DESC</otherwise>
+        </choose>
+    </select>
+    <!-- 根据条件查询文章总数 -->
+    <select id="getArticlesCountByCond" resultType="java.lang.Integer">
+        SELECT count(*) FROM
+        <include refid="BASE_TABLE"/>
+        <where>
+            <if test="contentCond.tags!=null">
+                AND tags LIKE CONCAT('%',#{contentCond.tags, jdbcType=VARCHAR},'%')
+            </if>
+            <if test="contentCond.statusList != null and contentCond.statusList.size() > 0">
+                AND status IN
+                <foreach collection="contentCond.statusList" item="s" open="(" separator="," close=")">#{s}</foreach>
+            </if>
+            <if test="contentCond.statusList == null or contentCond.statusList.size() == 0">
+                <if test="contentCond.status != null">
+                    AND status = #{contentCond.status, jdbcType=INTEGER}
+                </if>
+            </if>
+            <if test="contentCond.indexTop != null">
+                AND index_top = #{contentCond.indexTop, jdbcType=INTEGER}
+            </if>
+            <if test="contentCond.indexHot != null">
+                AND index_hot = #{contentCond.indexHot, jdbcType=INTEGER}
+            </if>
+            <if test="contentCond.indexElite != null">
+                AND index_elite = #{contentCond.indexElite, jdbcType=INTEGER}
+            </if>
+            <if test="contentCond.channelTop != null">
+                AND channel_top = #{contentCond.channelTop, jdbcType=INTEGER}
+            </if>
+            <if test="contentCond.channelHot != null">
+                AND channel_hot = #{contentCond.channelHot, jdbcType=INTEGER}
+            </if>
+            <if test="contentCond.channelElite != null">
+                AND channel_elite = #{contentCond.channelElite, jdbcType=INTEGER}
+            </if>
+            <if test="contentCond.menuTop != null">
+                AND menu_top = #{contentCond.menuTop, jdbcType=INTEGER}
+            </if>
+            <if test="contentCond.menuHot != null">
+                AND menu_hot = #{contentCond.menuHot, jdbcType=INTEGER}
+            </if>
+            <if test="contentCond.menuElite != null">
+                AND menu_elite = #{contentCond.menuElite, jdbcType=INTEGER}
+            </if>
+            <if test="contentCond.navElite != null">
+                AND nav_elite = #{contentCond.navElite, jdbcType=INTEGER}
+            </if>
+            <if test="contentCond.rightElite != null">
+                AND right_elite = #{contentCond.rightElite, jdbcType=INTEGER}
+            </if>
+            <if test="contentCond.leftElite != null">
+                AND left_elite = #{contentCond.leftElite, jdbcType=INTEGER}
+            </if>
+            <if test="contentCond.title != null">
+                AND title LIKE CONCAT('%',#{contentCond.title, jdbcType=VARCHAR},'%')
+            </if>
+            <if test="contentCond.startTime_createTime != null">
+                AND create_time &gt;= #{contentCond.startTime_createTime, jdbcType=VARCHAR}
+            </if>
+            <if test="contentCond.endTime_createTime != null">
+                AND create_time &lt;= #{contentCond.endTime_createTime, jdbcType=VARCHAR}
+            </if>
+            <if test="contentCond.classid != null">
+                AND class_id =#{contentCond.classid,jdbcType=INTEGER}
+            </if>
+            <if test="contentCond.xgid != null">
+                AND xgid =#{contentCond.xgid,jdbcType=INTEGER}
+            </if>
+            <if test="contentCond.singleLine1!=null">
+                AND single_line1 LIKE CONCAT('%',#{contentCond.singleLine1, jdbcType=VARCHAR},'%')
+            </if>
+            <if test="contentCond.singleLine2!=null">
+                AND single_line2 LIKE CONCAT('%',#{contentCond.singleLine2, jdbcType=VARCHAR},'%')
+            </if>
+            <if test="contentCond.singleLine3!=null">
+                AND single_line3 LIKE CONCAT('%',#{contentCond.singleLine3, jdbcType=VARCHAR},'%')
+            </if>
+            <if test="contentCond.singleLine4!=null">
+                AND single_line4 LIKE CONCAT('%',#{contentCond.singleLine4, jdbcType=VARCHAR},'%')
+            </if>
+            <if test="contentCond.singleLine5!=null">
+                AND single_line5 LIKE CONCAT('%',#{contentCond.singleLine5, jdbcType=VARCHAR},'%')
+            </if>
+            <if test="contentCond.singleLine6!=null">
+                AND single_line6 LIKE CONCAT('%',#{contentCond.singleLine6, jdbcType=VARCHAR},'%')
+            </if>
+            <if test="contentCond.singleLine7!=null">
+                AND single_line7 LIKE CONCAT('%',#{contentCond.singleLine7, jdbcType=VARCHAR},'%')
+            </if>
+            <if test="contentCond.singleLine8!=null">
+                AND single_line8 LIKE CONCAT('%',#{contentCond.singleLine8, jdbcType=VARCHAR},'%')
+            </if>
+            <if test="contentCond.singleLine9!=null">
+                AND single_line9 LIKE CONCAT('%',#{contentCond.singleLine9, jdbcType=VARCHAR},'%')
+            </if>
+            <if test="contentCond.singleLine10!=null">
+                AND single_line10 LIKE CONCAT('%',#{contentCond.singleLine10, jdbcType=VARCHAR},'%')
+            </if>
+            <if test="contentCond.singleLine11!=null">
+                AND single_line11 LIKE CONCAT('%',#{contentCond.singleLine11, jdbcType=VARCHAR},'%')
+            </if>
+            <if test="contentCond.singleLine12!=null">
+                AND single_line12 LIKE CONCAT('%',#{contentCond.singleLine12, jdbcType=VARCHAR},'%')
+            </if>
+            <if test="contentCond.singleLine13!=null">
+                AND single_line13 LIKE CONCAT('%',#{contentCond.singleLine13, jdbcType=VARCHAR},'%')
+            </if>
+            <if test="contentCond.singleLine14!=null">
+                AND single_line14 LIKE CONCAT('%',#{contentCond.singleLine14, jdbcType=VARCHAR},'%')
+            </if>
+            <if test="contentCond.singleLine15!=null">
+                AND single_line15 LIKE CONCAT('%',#{contentCond.singleLine15, jdbcType=VARCHAR},'%')
+            </if>
+            <if test="contentCond.singleLine16!=null">
+                AND single_line16 LIKE CONCAT('%',#{contentCond.singleLine16, jdbcType=VARCHAR},'%')
+            </if>
+            <if test="contentCond.singleLine17!=null">
+                AND single_line17 LIKE CONCAT('%',#{contentCond.singleLine17, jdbcType=VARCHAR},'%')
+            </if>
+            <if test="contentCond.singleLine18!=null">
+                AND single_line18 LIKE CONCAT('%',#{contentCond.singleLine18, jdbcType=VARCHAR},'%')
+            </if>
+            <if test="contentCond.singleLine19!=null">
+                AND single_line19 LIKE CONCAT('%',#{contentCond.singleLine19, jdbcType=VARCHAR},'%')
+            </if>
+            <if test="contentCond.singleLine20!=null">
+                AND single_line20 LIKE CONCAT('%',#{contentCond.singleLine20, jdbcType=VARCHAR},'%')
+            </if>
+            <if test="contentCond.note1!=null">
+                AND note1 LIKE CONCAT('%',#{contentCond.note1, jdbcType=VARCHAR},'%')
+            </if>
+            <if test="contentCond.note2!=null">
+                AND note2 LIKE CONCAT('%',#{contentCond.note2, jdbcType=VARCHAR},'%')
+            </if>
+            <if test="contentCond.note3!=null">
+                AND note3 LIKE CONCAT('%',#{contentCond.note3, jdbcType=VARCHAR},'%')
+            </if>
+            <if test="contentCond.note4!=null">
+                AND note4 LIKE CONCAT('%',#{contentCond.note4, jdbcType=VARCHAR},'%')
+            </if>
+            <if test="contentCond.note5!=null">
+                AND note5 LIKE CONCAT('%',#{contentCond.note5, jdbcType=VARCHAR},'%')
+            </if>
+            <if test="contentCond.note6!=null">
+                AND note6 LIKE CONCAT('%',#{contentCond.note6, jdbcType=VARCHAR},'%')
+            </if>
+            <if test="contentCond.note7!=null">
+                AND note7 LIKE CONCAT('%',#{contentCond.note7, jdbcType=VARCHAR},'%')
+            </if>
+            <if test="contentCond.note8!=null">
+                AND note8 LIKE CONCAT('%',#{contentCond.note8, jdbcType=VARCHAR},'%')
+            </if>
+            <if test="contentCond.note9!=null">
+                AND note9 LIKE CONCAT('%',#{contentCond.note9, jdbcType=VARCHAR},'%')
+            </if>
+            <if test="contentCond.note10!=null">
+                AND note10 LIKE CONCAT('%',#{contentCond.note10, jdbcType=VARCHAR},'%')
+            </if>
+            <if test="contentCond.note11!=null">
+                AND note11 LIKE CONCAT('%',#{contentCond.note11, jdbcType=VARCHAR},'%')
+            </if>
+            <if test="contentCond.note12!=null">
+                AND note12 LIKE CONCAT('%',#{contentCond.note12, jdbcType=VARCHAR},'%')
+            </if>
+            <if test="contentCond.note13!=null">
+                AND note13 LIKE CONCAT('%',#{contentCond.note13, jdbcType=VARCHAR},'%')
+            </if>
+            <if test="contentCond.note14!=null">
+                AND note14 LIKE CONCAT('%',#{contentCond.note14, jdbcType=VARCHAR},'%')
+            </if>
+            <if test="contentCond.note15!=null">
+                AND note15 LIKE CONCAT('%',#{contentCond.note15, jdbcType=VARCHAR},'%')
+            </if>
+            <if test="contentCond.content1!=null">
+                AND content1 LIKE CONCAT('%',#{contentCond.content1, jdbcType=VARCHAR},'%')
+            </if>
+            <if test="contentCond.content2!=null">
+                AND content2 LIKE CONCAT('%',#{contentCond.content2, jdbcType=VARCHAR},'%')
+            </if>
+            <if test="contentCond.content3!=null">
+                AND content3 LIKE CONCAT('%',#{contentCond.content3, jdbcType=VARCHAR},'%')
+            </if>
+            <if test="contentCond.content4!=null">
+                AND content4 LIKE CONCAT('%',#{contentCond.content4, jdbcType=VARCHAR},'%')
+            </if>
+            <if test="contentCond.content5!=null">
+                AND content5 LIKE CONCAT('%',#{contentCond.content5, jdbcType=VARCHAR},'%')
+            </if>
+            <if test="contentCond.content6!=null">
+                AND content6 LIKE CONCAT('%',#{contentCond.content6, jdbcType=VARCHAR},'%')
+            </if>
+            <include refid="ConfiguredContentCriteria"/>
+            and deleted=0
+        </where>
+    </select>
+
+    <select id="getArticleCount" resultType="java.lang.Long">
+        SELECT count(*)
+        FROM
+        <include refid="BASE_TABLE"/>
+        where class_id in (select id from t_oneshot where page_type=1 and (detail_page_url !='' or detail_page_url is not null) and is_deleted=0) and
+        deleted=0
+    </select>
+    <select id="getArticleCountBySiteId" resultType="java.lang.Long">
+        SELECT count(*)
+        FROM t_contents c
+        INNER JOIN t_oneshot o ON o.id = c.class_id
+        WHERE o.site_project_id = #{siteId}
+        AND o.page_type = 1
+        AND (o.detail_page_url != '' OR o.detail_page_url IS NOT NULL)
+        AND o.is_deleted = 0
+        AND c.deleted = 0
+    </select>
+    <select id="getPendingReviewCountBySiteId" resultType="java.lang.Long">
+        SELECT count(*)
+        FROM t_contents c
+        INNER JOIN t_oneshot o ON o.id = c.class_id
+        WHERE o.site_project_id = #{siteId}
+        AND o.page_type = 1
+        AND (o.detail_page_url != '' OR o.detail_page_url IS NOT NULL)
+        AND o.is_deleted = 0
+        AND c.deleted = 0
+        AND c.status = 2
+    </select>
+    <select id="getDraftCountBySiteId" resultType="java.lang.Long">
+        SELECT count(*)
+        FROM t_contents c
+        INNER JOIN t_oneshot o ON o.id = c.class_id
+        WHERE o.site_project_id = #{siteId}
+        AND o.page_type = 1
+        AND (o.detail_page_url != '' OR o.detail_page_url IS NOT NULL)
+        AND o.is_deleted = 0
+        AND c.deleted = 0
+        AND c.status = 0
+    </select>
+
+    <resultMap id="customMap" type="com.xinhongru.entity.ContentEntity">
+        <result column="create_time" property="createTime" javaType="java.time.LocalDateTime"
+                jdbcType="TIMESTAMP"
+                typeHandler="com.xinhongru.typeHandler.LocalDateTimeTypeHandler"/>
+        <result column="begin_time" property="beginTime" javaType="java.time.LocalDateTime"
+                jdbcType="TIMESTAMP"
+                typeHandler="com.xinhongru.typeHandler.LocalDateTimeTypeHandler"/>
+        <result column="end_time" property="endTime" javaType="java.time.LocalDateTime"
+                jdbcType="TIMESTAMP"
+                typeHandler="com.xinhongru.typeHandler.LocalDateTimeTypeHandler"/>
+        <result column="entry_into_force_time" property="entryIntoForceTime" javaType="java.time.LocalDateTime"
+                jdbcType="TIMESTAMP"
+                typeHandler="com.xinhongru.typeHandler.LocalDateTimeTypeHandler"/>
+        <result column="expiration_time" property="expirationTime" javaType="java.time.LocalDateTime"
+                jdbcType="TIMESTAMP"
+                typeHandler="com.xinhongru.typeHandler.LocalDateTimeTypeHandler"/>
+        <result column="create_date" property="createTime" javaType="java.time.LocalDateTime"
+                jdbcType="TIMESTAMP"
+                typeHandler="com.xinhongru.typeHandler.LocalDateTimeTypeHandler"/>
+    </resultMap>
+
+    <select id="getRecentlyArticle" resultType="com.xinhongru.entity.ContentEntity" resultMap="customMap">
+        SELECT
+        id, title
+        FROM
+        <include refid="BASE_TABLE"/>
+        ORDER BY create_time DESC
+    </select>
+
+    <!-- 模糊搜索 -->
+    <select id="searchArticle" resultType="com.xinhongru.entity.ContentEntity" resultMap="customMap">
+        SELECT
+        <include refid="BASE_COLUMN"/>
+        FROM
+        <include refid="BASE_TABLE"/>
+        AS c
+        <where>
+            c.title LIKE CONCAT('%',#{param, jdbcType=VARCHAR},'%')
+            OR
+            c.content LIKE CONCAT('%',#{param, jdbcType=VARCHAR},'%')
+        </where>
+    </select>
+    <select id="getTop10" resultType="com.xinhongru.entity.ContentEntity" resultMap="customMap">
+        select class_id, id, title, hits
+        from
+        <include refid="BASE_TABLE"/>
+        where class_id in (select id from t_oneshot where page_type=1 and (detail_page_url != '' or detail_page_url is not null ) and is_deleted=0) and
+        deleted=0 and status=1
+        order by hits desc, create_time desc
+        limit 10
+    </select>
+    <select id="getTop10BySiteId" resultType="com.xinhongru.entity.ContentEntity" resultMap="customMap">
+        select c.class_id, c.id, c.title, c.hits
+        from t_contents c
+        inner join t_oneshot o on o.id = c.class_id
+        where o.site_project_id = #{siteId}
+        and o.page_type = 1
+        and (o.detail_page_url != '' or o.detail_page_url is not null)
+        and o.is_deleted = 0
+        and c.deleted = 0
+        and c.status = 1
+        order by c.hits desc, c.create_time desc
+        limit 10
+    </select>
+    <select id="getTop10Hits" resultType="com.xinhongru.dto.TopHitRow">
+        select type, id, title, hits, menu_id, menu_name, detail_url
+        from (
+            select 'menu' as type,
+                   m.id as id,
+                   m.class_name as title,
+                   m.hits as hits,
+                   m.id as menu_id,
+                   m.class_name as menu_name,
+                   '' as detail_url
+            from t_oneshot m
+            where m.is_deleted = 0
+              and m.hits > 0
+            <if test="siteId != null">
+              and m.site_project_id = #{siteId}
+            </if>
+
+            union all
+
+            select 'content' as type,
+                   c.id as id,
+                   c.title as title,
+                   c.hits as hits,
+                   c.class_id as menu_id,
+                   o.class_name as menu_name,
+                   replace(replace(o.detail_page_url, '{id}', c.id), '{classId}', o.id) as detail_url
+            from t_contents c
+            inner join t_oneshot o on o.id = c.class_id
+            where o.page_type = 1
+              and o.is_deleted = 0
+              and (o.detail_page_url != '' or o.detail_page_url is not null)
+              and c.deleted = 0
+              and c.status = 1
+              and c.hits > 0
+            <if test="siteId != null">
+              and o.site_project_id = #{siteId}
+            </if>
+        ) t
+        order by t.hits desc, t.id desc
+        limit 10
+    </select>
+    <select id="getModelById" resultType="com.xinhongru.entity.ContentEntity" resultMap="customMap">
+        select * from
+        <include refid="BASE_TABLE"/>
+        where id=#{id}
+        LIMIT 1
+    </select>
+    <select id="getContentByCond" resultType="com.xinhongru.entity.ContentEntity" resultMap="customMap">
+        SELECT
+        <foreach collection="fieldNameList" separator="," item="fieldName">
+            ${fieldName}
+        </foreach>
+        FROM
+        <include refid="BASE_TABLE"/>
+        ORDER BY sort DESC,create_time DESC,id DESC
+    </select>
+    <select id="getSeoById" resultType="com.xinhongru.entity.ContentEntity" resultMap="customMap">
+        select id,class_id,seo_title,seo_keywords,seo_description from
+        <include refid="BASE_TABLE"/>
+        where class_id=#{classid} and id=#{id} and deleted=0
+        LIMIT 1
+    </select>
+    <select id="getChildCount" resultType="java.lang.Integer">
+        select count(*)
+        from
+        <include refid="BASE_TABLE"/>
+        where xgid = #{id}
+        and deleted = 0
+    </select>
+    <select id="getArticleByClassId" resultType="com.xinhongru.entity.ContentEntity" resultMap="customMap">
+        select *
+        from
+        <include refid="BASE_TABLE"/>
+        where class_id = #{classId}
+        and deleted = 0
+        <include refid="orderCommon"></include>
+    </select>
+    <select id="getArticleByClassIdForSelect" resultType="com.xinhongru.entity.ContentEntity" resultMap="customMap">
+        select id,title,class_id,xgid,site_project_id
+        from
+        <include refid="BASE_TABLE"/>
+        where
+        <if test="classIdList!=null">
+            class_id in
+            <foreach collection="classIdList" separator="," open="(" close=")" item="classId" index="index">
+                #{classId}
+            </foreach>
+        </if>
+        and deleted = 0 and status=1
+        <include refid="orderCommon"></include>
+    </select>
+    <select id="selectRevisionPreviewCandidates" resultType="com.xinhongru.entity.ContentEntity" resultMap="customMap">
+        SELECT <include refid="BASE_COLUMN"/>
+        FROM <include refid="BASE_TABLE"/> AS c
+        WHERE c.deleted = 0
+        <choose>
+            <when test="classIdList!=null and classIdList.size()>0">
+                AND c.class_id IN
+                <foreach collection="classIdList" separator="," open="(" close=")" item="classId" index="index">
+                    #{classId}
+                </foreach>
+            </when>
+            <otherwise>
+                AND 1 = 0
+            </otherwise>
+        </choose>
+        ORDER BY c.status = 1 DESC, c.create_time DESC, c.id DESC
+    </select>
+    <select id="getMessageCount" resultType="java.lang.Long">
+        SELECT COUNT(*) FROM t_contents c
+        JOIN t_oneshot m ON m.id = c.class_id
+        WHERE c.status = 1 AND c.deleted = 0 AND m.deleted = 0 AND m.is_form = 1
+    </select>
+    <select id="getMessageCountBySiteId" resultType="java.lang.Long">
+        SELECT COUNT(*) FROM t_contents c
+        JOIN t_oneshot m ON m.id = c.class_id
+        WHERE c.status = 1 AND c.deleted = 0 AND m.deleted = 0 AND m.is_form = 1
+          AND c.site_project_id = #{siteId} AND m.site_project_id = #{siteId}
+    </select>
+    <select id="getArticlesByCondForOutput" resultType="com.xinhongru.entity.ContentEntity" resultMap="customMap">
+
+    </select>
+    <select id="getBatchChildCount" resultType="java.lang.Integer">
+        select count(*)
+        from
+        <include refid="BASE_TABLE"/>
+        where xgid in
+        <foreach collection="ids" separator="," open="(" close=")" item="id" index="index">
+            #{id}
+        </foreach>
+        and deleted = 0
+    </select>
+
+
+
+    <select id="selectReferenceArticles" resultType="com.xinhongru.entity.ContentEntity">
+        SELECT c.id,c.title,c.class_id AS classid,c.site_project_id AS siteProjectId,
+               c.status,c.photo1,c.note1
+        FROM t_contents c JOIN t_oneshot m ON m.id=c.class_id
+        WHERE m.site_project_id=#{siteId} AND m.deleted=0 AND m.page_type=1 AND c.deleted=0
+          AND (c.site_project_id=#{siteId} OR c.site_project_id IS NULL)
+        <choose>
+            <when test="menuIds != null and !menuIds.isEmpty() and ids != null and !ids.isEmpty()">
+                AND c.class_id IN <foreach collection="menuIds" item="mid" open="(" close=")" separator=",">#{mid}</foreach>
+                AND c.id IN <foreach collection="ids" item="cid" open="(" close=")" separator=",">#{cid}</foreach>
+            </when>
+            <otherwise>AND 1=0</otherwise>
+        </choose>
+        <if test="publishedOnly">
+            AND c.status=1 AND m.has_front_channel=1
+            AND c.entry_into_force_time &lt;= CURRENT_TIMESTAMP
+            AND c.expiration_time &gt;= CURRENT_TIMESTAMP
+        </if>
+    </select>
+
+    <select id="selectSiteModelCandidates" resultType="com.xinhongru.entity.ContentEntity">
+        SELECT c.id,c.title,c.class_id AS classid,c.site_project_id AS siteProjectId,
+               c.status,SUBSTRING(c.note1,1,200) AS note1
+        FROM t_contents c JOIN t_oneshot m ON m.id=c.class_id
+        WHERE m.site_project_id=#{siteId} AND m.deleted=0 AND m.page_type=1 AND c.deleted=0
+          AND (c.site_project_id=#{siteId} OR c.site_project_id IS NULL)
+        <choose>
+            <when test="menuIds != null and !menuIds.isEmpty()">
+                AND c.class_id IN <foreach collection="menuIds" item="mid" open="(" close=")" separator=",">#{mid}</foreach>
+            </when>
+            <otherwise>AND 1=0</otherwise>
+        </choose>
+        <if test="titlePattern != null">AND c.title LIKE #{titlePattern} ESCAPE '!'</if>
+        ORDER BY c.id ASC
+    </select>
+</mapper>

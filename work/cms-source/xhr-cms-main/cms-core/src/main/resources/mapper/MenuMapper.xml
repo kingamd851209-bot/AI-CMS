@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xinhongru.web.mapper.MenuMapper">
+
+    <sql id="orderCommon">
+        and deleted=0 and is_system=0 and has_front_channel=1 order by sort asc,id asc
+    </sql>
+    <select id="getOneshotEntitiesByBizcodes" resultType="com.xinhongru.entity.OneshotEntity">
+        select * from t_oneshot where site_project_id = #{siteProjectId}
+        and biz_code in
+        <foreach collection="bizcodes" item="code" open="(" separator="," close=")">#{code}</foreach>
+        <include refid="orderCommon"/>
+    </select>
+    <select id="getOneshotChildrenByParentIds" resultType="com.xinhongru.entity.OneshotEntity">
+        select * from t_oneshot where site_project_id = #{siteProjectId} and is_loop = 1
+        and parent_id in
+        <foreach collection="parentIds" item="id" open="(" separator="," close=")">#{id}</foreach>
+        <include refid="orderCommon"/>
+    </select>
+    <!-- 读取直接子栏目但不限制 has_front_channel，用于获取产品页等被隐藏(has_front_channel=0)的区块栏目 -->
+    <select id="getOneshotChildrenByParentIdIgnoreChannel" resultType="com.xinhongru.entity.OneshotEntity">
+        select * from t_oneshot where parent_id = #{parentId} and is_loop = 1 and deleted = 0 and is_system = 0
+        order by sort asc, id asc
+    </select>
+    <update id="updateHits">
+        update t_oneshot
+        set hits=hits + 1
+        where id = #{classId}
+          and deleted = 0;
+    </update>
+
+    <select id="getModelById" resultType="com.xinhongru.entity.OneshotEntity">
+        select * from t_oneshot where id=#{id}
+        <include refid="orderCommon"></include>
+        LIMIT 1
+    </select>
+    <select id="getModelByIdIgnoreChannel" resultType="com.xinhongru.entity.OneshotEntity">
+        select * from t_oneshot where id=#{id} and deleted=0
+        order by sort asc,id asc
+        LIMIT 1
+    </select>
+    <select id="getOneshotEntityByBizcode" resultType="com.xinhongru.entity.OneshotEntity">
+        select * from t_oneshot where biz_code=#{bizcode} and site_project_id=#{siteProjectId}
+        <include refid="orderCommon"></include>
+        LIMIT 1
+    </select>
+    <select id="getOneshotListByBizcodes" resultType="com.xinhongru.entity.OneshotEntity">
+        select id, biz_code from t_oneshot
+        where site_project_id = #{siteProjectId}
+        and biz_code in
+        <foreach collection="bizcodes" item="bizcode" open="(" separator="," close=")">
+            #{bizcode}
+        </foreach>
+        and deleted = 0 and is_system = 0 and has_front_channel = 1
+    </select>
+    <select id="getOneshotListByParentId" resultType="com.xinhongru.entity.OneshotEntity">
+        select * from t_oneshot where parent_id=#{parentId} and is_loop=1
+        <include refid="orderCommon"></include>
+    </select>
+    <select id="getOneshotListByIds" resultType="com.xinhongru.entity.OneshotEntity">
+        select * from t_oneshot where
+        <foreach collection="ids" open="id in (" close=")" separator="," item="id">
+            #{id}
+        </foreach>
+        and is_loop=1
+        and deleted=0
+        and is_system=0
+        and has_front_channel=1
+
+        ORDER BY FIELD(id,
+        <foreach collection="ids" item="id" index="index" separator=",">
+            #{id}
+        </foreach>
+        )
+    </select>
+
+    <!-- 批量取回完整栏目实体（用于避免逐个 getModelById 的 N+1 查询）；不附加 listPageUrl -->
+    <select id="getOneshotListByIdsRaw" resultType="com.xinhongru.entity.OneshotEntity">
+        select * from t_oneshot
+        where deleted=0 and is_system=0 and has_front_channel=1
+        and id in
+        <foreach collection="ids" item="id" open="(" separator="," close=")">#{id}</foreach>
+    </select>
+
+    <!--个性化功能-->
+    <select id="getRandomProduct" resultType="com.xinhongru.entity.OneshotEntity">
+        SELECT *
+        from t_oneshot
+        where parent_id in (SELECT id
+                           FROM t_oneshot
+                           where parent_id = 12
+                             and id
+            != 178
+          and deleted=0)
+          and deleted=0
+        order by rand()
+            limit 4
+    </select>
+    <select id="getCompanyListByBusinessId" resultType="com.xinhongru.entity.OneshotEntity">
+        select *
+        from t_oneshot
+        where deleted = 0
+          and single_line8 = #{businessId}
+        order by sort asc, id asc
+    </select>
+    <select id="getChildCompany" resultType="com.xinhongru.web.resonseVo.ChildCompanyDTO">
+        select class_name as companyName,single_line7 as url from t_oneshot where deleted = 0 and single_line8=#{categoryId} order by sort asc,id asc
+    </select>
+    <select id="getClassIdListByIdentifies" resultType="java.lang.Integer">
+        select id from t_oneshot where deleted = 0 and is_system=0 and has_front_channel=1 and identifies=#{identifies}
+    </select>
+    <select id="getClassIdListByIdentifiesAndSite" resultType="java.lang.Integer">
+        select id from t_oneshot
+        where deleted = 0 and is_system=0 and has_front_channel=1
+        and site_project_id=#{siteProjectId} and identifies=#{identifies}
+        order by sort asc, id asc
+    </select>
+
+</mapper>

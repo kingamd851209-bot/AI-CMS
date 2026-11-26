@@ -1,0 +1,188 @@
+# 公共框架配置；Redis、Knife4j、CMS、MKP 配置由各环境独立维护。
+server:
+  # CMS 管理节点的 HTTP 端口；独立站点服务使用各自的站点端口。
+  port: 7088
+  # 访问 IP 由统一工具读取转发头，未提供时使用连接地址。
+  forward-headers-strategy: none
+  servlet:
+    session:
+      cookie:
+        # 禁止 JavaScript 读取 Session Cookie。
+        http-only: true
+        # lax 限制跨站发送 Cookie，同时允许顶层导航携带会话。
+        same-site: lax
+        # 当前入口使用 HTTP；HTTPS 部署通过已有环境变量设为 true。
+        secure: ${SERVER_SERVLET_SESSION_COOKIE_SECURE:false}
+      # 会话空闲超时；m 表示分钟，60m 为 1 小时。
+      timeout: 60m
+
+spring:
+  # 环境选择必须位于 spring.profiles 下，与 mvc、datasource 同级。
+  profiles:
+    # 未显式指定环境时启用 dev，并加载 application-dev.yml。
+    # 可选：dev、local、test、uat、prod。
+    # 部署时使用 --spring.profiles.active=prod 或 SPRING_PROFILES_ACTIVE=prod 覆盖。
+    # IDE 的 Active profiles 填写环境名；Maven 使用 -Dspring-boot.run.profiles=dev。
+    # 此项只在公共配置中声明，不放入 application-{profile}.yml。
+    active: dev
+  session:
+    data:
+      redis:
+        # 隔离包名迁移前的 JDK 序列化会话，升级时保持命名空间稳定。
+        namespace: cms:session:xinhongru:v1
+  mvc:
+    async:
+      # MVC 异步请求超时，单位毫秒；用于 AI 等长耗时接口。
+      request-timeout: 1800000
+    format:
+      # MVC 请求参数中的日期时间格式，不控制 JSON 日期序列化。
+      date-time: yyyy-MM-dd HH:mm:ss
+      # MVC 请求参数中的日期格式。
+      date: yyyy-MM-dd
+    pathmatch:
+      # 保留现有 Ant 路径匹配语义。
+      matching-strategy: ant_path_matcher
+
+  jackson:
+    # API 中的日期时间统一使用北京时间。
+    time-zone: Asia/Shanghai
+
+  datasource:
+    # 数据源逻辑名称，不是数据库连接地址或库名。
+    name: mysql_database
+    # 使用 Druid 数据源；连接信息在对应环境文件中配置。
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      # JDBC 驱动类；更换数据库时需同时核对驱动依赖与连接地址。
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      # 连接池初始化连接数。
+      initial-size: 10
+      # 连接池保留的最小空闲连接数。
+      min-idle: 10
+      # 连接池最大活动连接数，限制同时借出的数据库连接。
+      max-active: 50
+      # 获取连接的最长等待时间，单位毫秒。
+      max-wait: 60000
+      # 空闲连接检测周期，单位毫秒。
+      time-between-eviction-runs-millis: 60000
+      # 空闲连接可被回收前的最短空闲时间，单位毫秒。
+      min-evictable-idle-time-millis: 300000
+      # 连接有效性检查使用的 SQL，需符合目标数据库语法。
+      validation-query: SELECT 'x'
+      # 借出连接时按空闲时长触发有效性检测。
+      test-while-idle: true
+      # 每次借出连接时是否检测；开启会增加数据库访问开销。
+      test-on-borrow: false
+      # 每次归还连接时是否检测。
+      test-on-return: false
+      # 是否缓存预编译语句；与下方缓存大小参数一起评估调整。
+      pool-prepared-statements: false
+      # 每连接的预编译语句缓存上限；Druid 的此 setter 也会影响缓存开关。
+      max-pool-prepared-statement-per-connection-size: 20
+      filter:
+        config:
+          # 当前使用明文数据库密码；启用加密时需同时配置解密参数和公钥。
+          enabled: false
+  servlet:
+    multipart:
+      # 单个上传文件的大小上限，MB 表示兆字节。
+      max-file-size: 800MB
+      # 一次 multipart 请求的总大小上限，包含请求中的全部文件。
+      max-request-size: 800MB
+  cache:
+    # Spring Boot 缓存自动配置选择 Redis；具体缓存策略见 RedisConfig。
+    type: redis
+  application:
+    # 应用逻辑名称，用于启动日志等应用标识。
+    name: xhr-cms
+  main:
+    # 禁止 Bean 循环依赖；出现循环应修正依赖设计。
+    allow-circular-references: false
+
+springdoc:
+  api-docs:
+    # OpenAPI JSON 文档访问路径。
+    path: /v3/api-docs
+  swagger-ui:
+    # Swagger UI 的入口路径。
+    path: /swagger-ui.html
+    # 文档分组排序方式，alpha 表示按字母排序。
+    tags-sorter: alpha
+    # 文档接口排序方式，alpha 表示按字母排序。
+    operations-sorter: alpha
+
+mybatis-plus:
+  # 扫描各模块 classpath 下的 Mapper XML；通配符支持多模块资源。
+  mapper-locations: classpath*:mapper/**/*.xml
+  # MyBatis 实体类型别名扫描包。
+  type-aliases-package: com.xinhongru.entity
+  configuration:
+    # 将数据库下划线字段名映射为 Java 驼峰属性名。
+    map-underscore-to-camel-case: true
+    # 查询结果为 null 时是否仍调用 setter。
+    call-setters-on-nulls: false
+    # SQL 日志实现；StdOutImpl 直接输出到控制台，不受下方 logger 级别控制。
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+logging:
+  level:
+    # 历史 DAO 包日志级别，不控制 MyBatis StdOutImpl 的控制台 SQL 输出。
+    com.xinhongru.dao: info
+    # Mapper 包日志级别，不控制 MyBatis StdOutImpl 的控制台 SQL 输出。
+    com.xinhongru.mapper: info
+
+uploadFile:
+  # 上传扩展名白名单，逗号分隔；由 UploadConfig 绑定，常见图片额外校验文件签名。
+  format:
+    # 图片：常用网页图片、图标、印刷图片及手机照片；站点图集复用此列表。
+    image: jpg,jpeg,png,gif,bmp,webp,svg,ico,avif,tif,tiff,heic,heif
+    # 附件：Office/WPS/OpenDocument 文档、文本及数据交换文件、压缩包和安卓安装包。
+    # 多重后缀按最后一段匹配，例如 .tar.gz 使用 gz；仅控制上传许可，不保证浏览器可预览。
+    file: >-
+      doc,docx,docm,dot,dotx,xls,xlsx,xlsm,xlt,xltx,ppt,pptx,pptm,pps,ppsx,pot,potx,
+      pdf,rtf,odt,ods,odp,wps,et,dps,txt,csv,tsv,md,json,xml,yaml,yml,log,
+      zip,rar,7z,tar,gz,bz2,xz,apk
+    # 视频：常见发布、拍摄及存档格式；能否在线播放取决于浏览器和实际编码。
+    video: mp4,webm,mov,m4v,avi,mkv,wmv,flv,mpg,mpeg,3gp,ts,mts,m2ts
+    # 音频：常用有损、无损及录音格式。
+    audio: mp3,wav,ogg,oga,m4a,aac,flac,wma,aiff,aif,amr,opus
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        # 通过 HTTP 暴露的 Actuator 端点；health 为健康检查。
+        include: health
+  endpoint:
+    health:
+      # 健康检查详情展示策略，always 表示始终返回组件详情。
+      show-details: always
+      group:
+        readiness:
+          # 就绪检查组件：db 检查数据库，coreRuntimeReadiness 检查核心运行配置。
+          include: db,coreRuntimeReadiness
+
+cms:
+  admin:
+    frontend-base-url: ""
+  workbench:
+    enabled: false
+    experience:
+      enabled: false
+  password-reset:
+    enabled: false
+  druid:
+    enabled: false
+  ui-package:
+    auto-start: false
+  ai:
+    generation:
+      enabled: false
+      api-key: ""
+      model-name: ""
+    agent:
+      opencode:
+        enabled: false
+  preview-access:
+    enabled: false

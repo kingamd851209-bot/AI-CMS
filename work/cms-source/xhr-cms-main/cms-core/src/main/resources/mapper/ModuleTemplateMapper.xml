@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xinhongru.mapper.ModuleTemplateMapper">
+
+    <insert id="add">
+        insert into t_module_menu
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="className !=null">
+                class_name,
+            </if>
+            <if test="classEnName !=null">
+                class_en_name,
+            </if>
+            <if test="createTime !=null">
+                create_time,
+            </if>
+            <if test="listPageUrl !=null">
+                list_page_url,
+            </if>
+            <if test="detailPageUrl !=null">
+                detail_page_url,
+            </if>
+            <if test="parentId !=null">
+                parent_id,
+            </if>
+            <if test="sort !=null">
+                sort,
+            </if>
+            <if test="menuField !=null">
+                menu_field,
+            </if>
+            <if test="identifies !=null">
+                identifies,
+            </if>
+            <if test="modelField !=null">
+                model_field,
+            </if>
+            <if test="modelList !=null">
+                model_list,
+            </if>
+            <if test="modelSearch !=null">
+                model_search,
+            </if>
+            <if test="setting !=null">
+                setting,
+            </if>
+            <if test="hasManageChannel !=null">
+                has_manage_channel,
+            </if>
+            <if test="url !=null">
+                url,
+            </if>
+            <if test="hasFrontChannel !=null">
+                has_front_channel,
+            </if>
+            <if test="pageType !=null">
+                page_type,
+            </if>
+            <if test="isSubMenu !=null">
+                is_sub_menu,
+            </if>
+            <if test="isCanDeleted !=null">
+                is_can_deleted,
+            </if>
+            <if test="isModuleMenu !=null">
+                is_module_menu,
+            </if>
+            <if test="isCanCascadeDeleted !=null">
+                is_can_cascade_deleted,
+            </if>
+            <if test="isCanAddSub !=null">
+                is_can_add_sub,
+            </if>
+            <if test="isCanEdit !=null">
+                is_can_edit,
+            </if>
+            <if test="isCanSort !=null">
+                is_can_sort,
+            </if>
+            <if test="isCanShowHidden !=null">
+                is_can_show_hidden,
+            </if>
+            <if test="IsShowCrumbs !=null">
+                is_show_crumbs,
+            </if>
+            <if test="moduleId !=null">
+                module_id,
+            </if>
+            <if test="websitePublic !=null">
+                website_public,
+            </if>
+            <if test="isCanAddArticle !=null">
+                is_can_add_article,
+            </if>
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="className !=null">
+                #{className},
+            </if>
+            <if test="classEnName !=null">
+                #{classEnName},
+            </if>
+            <if test="createTime !=null">
+                #{createTime},
+            </if>
+            <if test="listPageUrl !=null">
+                #{listPageUrl},
+            </if>
+            <if test="detailPageUrl !=null">
+                #{detailPageUrl},
+            </if>
+            <if test="parentId !=null">
+                #{parentId},
+            </if>
+            <if test="sort !=null">
+                #{sort},
+            </if>
+            <if test="menuField !=null">
+                #{menuField},
+            </if>
+            <if test="identifies !=null">
+                #{identifies},
+            </if>
+            <if test="modelField !=null">
+                #{modelField},
+            </if>
+            <if test="modelList !=null">
+                #{modelList},
+            </if>
+            <if test="modelSearch !=null">
+                #{modelSearch},
+            </if>
+            <if test="setting !=null">
+                #{setting},
+            </if>
+            <if test="hasManageChannel !=null">
+                #{hasManageChannel},
+            </if>
+            <if test="url !=null">
+                #{url},
+            </if>
+            <if test="hasFrontChannel !=null">
+                #{hasFrontChannel},
+            </if>
+            <if test="pageType !=null">
+                #{pageType},
+            </if>
+            <if test="isSubMenu !=null">
+                #{isSubMenu},
+            </if>
+            <if test="isCanDeleted !=null">
+                #{isCanDeleted},
+            </if>
+            <if test="isModuleMenu !=null">
+                #{isModuleMenu},
+            </if>
+            <if test="isCanCascadeDeleted !=null">
+                #{isCanCascadeDeleted},
+            </if>
+            <if test="isCanAddSub !=null">
+                #{isCanAddSub},
+            </if>
+            <if test="isCanEdit !=null">
+                #{isCanEdit},
+            </if>
+            <if test="isCanSort !=null">
+                #{isCanSort},
+            </if>
+            <if test="isCanShowHidden !=null">
+                #{isCanShowHidden},
+            </if>
+            <if test="IsShowCrumbs !=null">
+                #{IsShowCrumbs},
+            </if>
+            <if test="moduleId !=null">
+                #{moduleId},
+            </if>
+            <if test="websitePublic !=null">
+                #{websitePublic},
+            </if>
+            <if test="websitePublic !=null">
+                #{isCanAddArticle},
+            </if>
+        </trim>
+    </insert>
+    <delete id="deleteByModuleId">
+        delete
+        from t_module_menu
+        where module_id = #{moduleId}
+    </delete>
+    <select id="getModuleTemplateListByModuleId" resultType="com.xinhongru.entity.ModuleTemplateEntity">
+        select *
+        from t_module_menu
+        where module_id = #{moduleId} order by id asc
+    </select>
+</mapper>

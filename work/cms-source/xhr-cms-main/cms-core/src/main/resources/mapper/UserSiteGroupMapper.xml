@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xinhongru.mapper.UserSiteGroupMapper">
+
+    <sql id="BASE_TABLE">
+        t_user_site_group
+    </sql>
+
+    <select id="selectByUserId" resultType="com.xinhongru.entity.UserSiteGroupEntity">
+        select * from
+        <include refid="BASE_TABLE"></include>
+        where user_id=#{userId}
+    </select>
+
+    <select id="selectByUserIdAndSiteId" resultType="com.xinhongru.entity.UserSiteGroupEntity">
+        select * from
+        <include refid="BASE_TABLE"></include>
+        where user_id=#{userId} and site_id=#{siteId}
+        order by case when group_id=(select group_id from t_users where id=#{userId}) then 0 else 1 end, group_id
+        limit 1
+    </select>
+
+    <delete id="deleteByUserId">
+        delete from
+        <include refid="BASE_TABLE"></include>
+        where user_id=#{userId}
+    </delete>
+
+    <insert id="insertBatch">
+        insert into
+        <include refid="BASE_TABLE"></include>
+        (user_id, site_id, group_id, created)
+        values
+        <foreach collection="list" item="item" separator=",">
+            (#{item.userId}, #{item.siteId}, #{item.groupId}, #{item.created})
+        </foreach>
+    </insert>
+</mapper>

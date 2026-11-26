@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xinhongru.mapper.LogMapper">
+
+    <sql id="BASE_TABLE">
+        t_logs
+    </sql>
+
+    <!-- 基本列 -->
+    <sql id="BASE_COLUMN">
+        l.id, l.action, l.request_data, l.user_id, l.ip, l.create_time,l.user_name,l.spend_time
+    </sql>
+    <resultMap id="customMap" type="com.xinhongru.entity.LogEntity">
+        <result column="create_time" property="createTime" javaType="java.time.LocalDateTime"
+                jdbcType="TIMESTAMP"
+                typeHandler="com.xinhongru.typeHandler.LocalDateTimeTypeHandler"/>
+    </resultMap>
+    <!-- 新增日志记录 -->
+    <insert id="addLog" parameterType="com.xinhongru.entity.LogEntity">
+        INSERT INTO
+        <include refid="BASE_TABLE"/>
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            action, request_data, user_id, ip, create_time,url,http_method,class_method,spend_time,response_data,user_name
+        </trim>
+        <trim prefix="VALUES(" suffix=")" suffixOverrides=",">
+            #{action, jdbcType=VARCHAR}, #{requestData, jdbcType=VARCHAR},
+            #{userId, jdbcType=INTEGER}, #{ip, jdbcType=VARCHAR},
+            #{createTime},#{url, jdbcType=VARCHAR},#{httpMethod, jdbcType=VARCHAR},
+            #{classMethod, jdbcType=VARCHAR},#{spendTime, jdbcType=INTEGER},#{responseData, jdbcType=VARCHAR}
+            ,#{userName, jdbcType=VARCHAR}
+        </trim>
+    </insert>
+
+    <!-- 查找日志 -->
+    <select id="getLogs" resultType="com.xinhongru.entity.LogEntity" resultMap="customMap">
+        SELECT
+        <include refid="BASE_COLUMN"/>
+        FROM
+        <include refid="BASE_TABLE"/>
+        AS l
+        <where>
+            <if test="uid!=13">
+                user_id!=13
+            </if>
+        </where>
+        ORDER BY l.id DESC
+    </select>
+    <select id="getLogList" resultType="com.xinhongru.entity.LogEntity" resultMap="customMap">
+        SELECT
+        <include refid="BASE_COLUMN"/>
+        FROM
+        <include refid="BASE_TABLE"/>
+        AS l
+        <where>
+            <if test="query.userId>0">and l.user_id=#{query.userId}</if>
+            <if test="query.beginTime!=null">and l.create_time &gt;= concat(#{query.beginTime},' 00:00:00')</if>
+            <if test="query.endTime!=null">and l.create_time &lt;= concat(#{query.endTime},' 23:59:59')</if>
+            <if test="query.key!=null">and l.action like concat('%',#{query.key},'%')</if>
+            <foreach collection="query.userIds" nullable="true" open=" and l.user_id in (" close=")" separator="," item="id">
+                #{id}
+            </foreach>
+        </where>
+        ORDER BY l.id DESC
+    </select>
+    <select id="getLogDetails" resultType="com.xinhongru.entity.LogEntity" resultMap="customMap">
+        select *
+        from
+        <include refid="BASE_TABLE"/>
+        where id=#{id}
+    </select>
+
+
+</mapper>

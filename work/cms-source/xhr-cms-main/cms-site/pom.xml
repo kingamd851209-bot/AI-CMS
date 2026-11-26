@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.xinhongru</groupId>
+        <artifactId>hongru-cms</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+    <artifactId>cms-site</artifactId>
+    <name>CMS Site</name>
+    <dependencies>
+        <dependency>
+            <groupId>com.xinhongru</groupId>
+            <artifactId>cms-contracts</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.xinhongru</groupId>
+            <artifactId>cms-security</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.xinhongru</groupId>
+            <artifactId>cms-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.thymeleaf</groupId>
+            <artifactId>thymeleaf-spring6</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.undertow</groupId>
+            <artifactId>undertow-core</artifactId>
+            <version>2.3.24.Final</version>
+        </dependency>
+        <dependency>
+            <groupId>com.microsoft.playwright</groupId>
+            <artifactId>playwright</artifactId>
+            <exclusions>
+                <!-- Playwright publishes this test API at compile scope; the CMS runtime does not use it. -->
+                <exclusion>
+                    <groupId>org.opentest4j</groupId>
+                    <artifactId>opentest4j</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.belerweb</groupId>
+            <artifactId>pinyin4j</artifactId>
+        </dependency>
+    </dependencies>
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+            <!-- 为 IDEA 提供模板的 Java 类型解析范围；不复制模板到构建输出。 -->
+            <resource>
+                <directory>${project.basedir}/../runtime/template</directory>
+                <excludes>
+                    <exclude>**/*</exclude>
+                </excludes>
+            </resource>
+        </resources>
+    </build>
+</project>

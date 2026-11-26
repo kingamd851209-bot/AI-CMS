@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xinhongru.mapper.UserGroupMapper">
+
+    <sql id="BASE_TABLE">
+        t_usergroups
+    </sql>
+
+    <insert id="addUserGroup" useGeneratedKeys="true" keyProperty="id">
+        insert into
+        <include refid="BASE_TABLE"></include>
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="title!=null">title,</if>
+            <if test="parentId!=null">parent_id,</if>
+            <if test="note!=null">note,</if>
+            <if test="enabled!=null">enabled,</if>
+            <if test="siteId!=null">site_id,</if>
+            <if test="groupSetting!=null">group_setting,</if>
+            <if test="otherSetting!=null">other_setting,</if>
+            <if test="menuSetting!=null">menu_setting,</if>
+            <if test="platformSetting!=null">platform_setting,</if>
+            <if test="platformOtherSetting!=null">platform_other_setting,</if>
+            <if test="createTime!=null">create_time,</if>
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="title!=null">#{title},</if>
+            <if test="parentId!=null">#{parentId},</if>
+            <if test="note!=null">#{note},</if>
+            <if test="enabled!=null">#{enabled},</if>
+            <if test="siteId!=null">#{siteId},</if>
+            <if test="groupSetting!=null">#{groupSetting},</if>
+            <if test="otherSetting!=null">#{otherSetting},</if>
+            <if test="menuSetting!=null">#{menuSetting},</if>
+            <if test="platformSetting!=null">#{platformSetting},</if>
+            <if test="platformOtherSetting!=null">#{platformOtherSetting},</if>
+            <if test="createTime!=null">#{createTime},</if>
+        </trim>
+    </insert>
+    <update id="updateUserGroup">
+        update
+        <include refid="BASE_TABLE"></include>
+        <set>
+            <if test="title!=null">title=#{title},</if>
+            <if test="parentId!=null">parent_id=#{parentId},</if>
+            <if test="note!=null">note=#{note},</if>
+            <if test="enabled!=null">enabled=#{enabled},</if>
+            <if test="siteId!=null">site_id=#{siteId},</if>
+            <if test="groupSetting!=null">group_setting=#{groupSetting},</if>
+            <if test="otherSetting!=null">other_setting=#{otherSetting},</if>
+            <if test="menuSetting!=null">menu_setting=#{menuSetting},</if>
+            <if test="platformSetting!=null">platform_setting=#{platformSetting},</if>
+            <if test="platformOtherSetting!=null">platform_other_setting=#{platformOtherSetting},</if>
+        </set>
+        where id=#{id} and deleted=0
+    </update>
+    <update id="updateSwitch">
+        update
+        <include refid="BASE_TABLE"></include>
+        <set>
+            <if test="fieldName=='Enabled'">
+                enabled=1-enabled
+            </if>
+        </set>
+        where id=#{id}
+    </update>
+    <delete id="deleteUserGroup">
+        update
+        <include refid="BASE_TABLE"></include>
+        set deleted=1
+        where id = #{groupId}
+    </delete>
+    <select id="getUserGroupList" resultType="com.xinhongru.entity.UserGroupEntity">
+        select *
+        from
+        <include refid="BASE_TABLE"></include>
+        where deleted=0
+        <if test="siteId!=null">
+            and site_id=#{siteId}
+        </if>
+    </select>
+    <select id="getUserGroupById" resultType="com.xinhongru.entity.UserGroupEntity">
+        select * from
+        <include refid="BASE_TABLE"></include>
+        where id=#{groupId} and deleted=0
+    </select>
+</mapper>

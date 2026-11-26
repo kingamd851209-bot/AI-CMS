@@ -1,0 +1,76 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+    "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <title></title>
+        <style type="text/css">
+            *{color: #838383;margin: 0;padding: 0}
+            html,body {font-size: 12px;overflow: hidden; }
+            .content{padding:5px 0 0 15px;}
+            input{width:210px;height:21px;line-height:21px;margin-left: 4px;}
+        </style>
+        <script src="../../third-party/jquery-1.10.2.min.js"></script>
+    </head>
+    <body>
+
+        <div class="content">
+            <span>URL: </span><input id="anchorName"  value="" /><br>
+            <span style="color: red;">注:请输入域名为mp.weixin.qq.com的链接地址</span>
+        </div>
+        <script type="text/javascript" src="../internal.js"></script>
+        <script type="text/javascript">
+            var anchorInput = $G('anchorName'),
+                node = editor.selection.getRange().getClosedNode();
+            if(node && node.tagName == 'IMG' && (node = node.getAttribute('anchorname'))){
+                anchorInput.value = node;
+            }
+            anchorInput.onkeydown = function(evt){
+                evt = evt || window.event;
+                if(evt.keyCode == 13){
+                    editor.execCommand('wechat', anchorInput.value);
+                    // dialog.close();
+                    domUtils.preventDefault(evt)
+                }
+            };
+            dialog.onok = function (){
+                editor.execCommand('wechat', anchorInput.value);
+                //layer.msg(editor.valueOf())
+                if(checkValue(anchorInput.value)){
+                    alert("请输入微文地址")
+
+                    editor.execCommand("wechat",'{'+111111+'}')
+                    return;
+                }
+                var wxurl = anchorInput.value;
+
+                $('.content').html('<div style="text-align:center;"><img style="display: inline-block;vertical-align: middle;" src="./loding.gif"/> <span style="display: inline-block;vertical-align: middle;">正在导入，请稍后...</span></div>')
+
+                $.ajax({
+                    url:"/api/admin/wechat/wechatUpload",
+                    type:"POST",
+                    data:{
+                        "url": wxurl
+                    },
+                    async: true,
+                    success:function (data){
+                        if (!data.success){
+                            alert(data.msg)
+                            return;
+                        }
+                        var content = data.content;
+                        editor.setContent(content);
+                        console.log(anchorInput.value)
+                        dialog.close();
+                    }
+                })
+                return false;
+            };
+            $focus(anchorInput);
+
+            function checkValue(value){
+                return (value === null || value ==="" || value === undefined)
+            }
+        </script>
+    </body>
+</html>

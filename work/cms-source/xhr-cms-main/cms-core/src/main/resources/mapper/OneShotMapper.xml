@@ -1,0 +1,1002 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xinhongru.mapper.OneShotMapper">
+    <sql id="orderCommon">
+        order by sort asc,
+        id asc,create_time asc
+    </sql>
+    <update id="update">
+        update t_oneshot
+        <set>
+            <if test="publicSearchText != null">public_search_text = #{publicSearchText},</if>
+            <if test="extensionFields != null">extension_fields = #{extensionFields},</if>
+            <if test="className != null">
+                class_name = #{className},
+            </if>
+            <if test="classEnName != null">
+                class_en_name = #{classEnName},
+            </if>
+            <if test="singleLine1 != null">
+                single_line1 = #{singleLine1},
+            </if>
+            <if test="singleLine2 != null">
+                single_line2 = #{singleLine2},
+            </if>
+            <if test="singleLine3 != null">
+                single_line3 = #{singleLine3},
+            </if>
+            <if test="singleLine4 != null">
+                single_line4 = #{singleLine4},
+            </if>
+            <if test="singleLine5 != null">
+                single_line5 = #{singleLine5},
+            </if>
+            <if test="singleLine6 != null">
+                single_line6 = #{singleLine6},
+            </if>
+            <if test="singleLine7 != null">
+                single_line7 = #{singleLine7},
+            </if>
+            <if test="singleLine8 != null">
+                single_line8 = #{singleLine8},
+            </if>
+            <if test="singleLine9 != null">
+                single_line9 = #{singleLine9},
+            </if>
+            <if test="singleLine10 != null">
+                single_line10 = #{singleLine10},
+            </if>
+            <if test="singleLine11 != null">
+                single_line11 = #{singleLine11},
+            </if>
+            <if test="singleLine12 != null">
+                single_line12 = #{singleLine12},
+            </if>
+            <if test="singleLine13 != null">
+                single_line13 = #{singleLine13},
+            </if>
+            <if test="singleLine14 != null">
+                single_line14 = #{singleLine14},
+            </if>
+            <if test="singleLine15 != null">
+                single_line15 = #{singleLine15},
+            </if>
+            <if test="singleLine16 != null">
+                single_line16 = #{singleLine16},
+            </if>
+            <if test="singleLine17 != null">
+                single_line17 = #{singleLine17},
+            </if>
+            <if test="singleLine18 != null">
+                single_line18 = #{singleLine18},
+            </if>
+            <if test="singleLine19 != null">
+                single_line19 = #{singleLine19},
+            </if>
+            <if test="singleLine20 != null">
+                single_line20 = #{singleLine20},
+            </if>
+            <if test="singleLine21 != null">
+                single_line21 = #{singleLine21},
+            </if>
+            <if test="singleLine22 != null">
+                single_line22 = #{singleLine22},
+            </if>
+            <if test="singleLine23!= null">
+                single_line23 = #{singleLine23},
+            </if>
+            <if test="singleLine24 != null">
+                single_line24 = #{singleLine24},
+            </if>
+            <if test="singleLine25 != null">
+                single_line25 = #{singleLine25},
+            </if>
+            <if test="singleLine26 != null">
+                single_line26 = #{singleLine26},
+            </if>
+            <if test="singleLine27 != null">
+                single_line27 = #{singleLine27},
+            </if>
+            <if test="singleLine28 != null">
+                single_line28 = #{singleLine28},
+            </if>
+            <if test="singleLine29 != null">
+                single_line29 = #{singleLine29},
+            </if>
+            <if test="singleLine30 != null">
+                single_line30 = #{singleLine30},
+            </if>
+            <if test="note1 != null">
+                note1 = #{note1},
+            </if>
+            <if test="note2 != null">
+                note2 = #{note2},
+            </if>
+            <if test="note3 != null">
+                note3 = #{note3},
+            </if>
+            <if test="note4 != null">
+                note4 = #{note4},
+            </if>
+            <if test="note5 != null">
+                note5 = #{note5},
+            </if>
+            <if test="note6 != null">
+                note6 = #{note6},
+            </if>
+            <if test="note7 != null">
+                note7 = #{note7},
+            </if>
+            <if test="note8 != null">
+                note8 = #{note8},
+            </if>
+            <if test="note9 != null">
+                note9 = #{note9},
+            </if>
+            <if test="note10 != null">
+                note10 = #{note10},
+            </if>
+            <if test="note11 != null">
+                note11 = #{note11},
+            </if>
+            <if test="note12 != null">
+                note12 = #{note12},
+            </if>
+            <if test="note13 != null">
+                note13 = #{note13},
+            </if>
+            <if test="note14 != null">
+                note14 = #{note14},
+            </if>
+            <if test="note15 != null">
+                note15 = #{note15},
+            </if>
+            <if test="photo1 != null">
+                photo1 = #{photo1},
+            </if>
+            <if test="photo2 != null">
+                photo2 = #{photo2},
+            </if>
+            <if test="photo3 != null">
+                photo3 = #{photo3},
+            </if>
+            <if test="photo4 != null">
+                photo4 = #{photo4},
+            </if>
+            <if test="photo5 != null">
+                photo5 = #{photo5},
+            </if>
+            <if test="photo6 != null">
+                photo6 = #{photo6},
+            </if>
+            <if test="photo7 != null">
+                photo7 = #{photo7},
+            </if>
+            <if test="photo8 != null">
+                photo8 = #{photo8},
+            </if>
+            <if test="photo9 != null">
+                photo9 = #{photo9},
+            </if>
+            <if test="photo10 != null">
+                photo10 = #{photo10},
+            </if>
+            <if test="photo11 != null">
+                photo11 = #{photo11},
+            </if>
+            <if test="photo12 != null">
+                photo12 = #{photo12},
+            </if>
+            <if test="photo13 != null">
+                photo13 = #{photo13},
+            </if>
+            <if test="photo14 != null">
+                photo14 = #{photo14},
+            </if>
+            <if test="photo15 != null">
+                photo15 = #{photo15},
+            </if>
+            <if test="createTime == null">
+                create_time = now(),
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+            <if test="beginTime != null">
+                begin_time = #{beginTime},
+            </if>
+            <if test="endTime != null">
+                end_time = #{endTime},
+            </if>
+            <if test="file1 != null">
+                file1 = #{file1},
+            </if>
+            <if test="file2 != null">
+                file2 = #{file2},
+            </if>
+            <if test="file3 != null">
+                file3 = #{file3},
+            </if>
+            <if test="file4 != null">
+                file4 = #{file4},
+            </if>
+            <if test="content1 != null">
+                content1 = #{content1},
+            </if>
+            <if test="content2 != null">
+                content2 = #{content2},
+            </if>
+            <if test="content3 != null">
+                content3 = #{content3},
+            </if>
+            <if test="content4 != null">
+                content4 = #{content4},
+            </if>
+            <if test="content5 != null">
+                content5 = #{content5},
+            </if>
+            <if test="content6 != null">
+                content6 = #{content6},
+            </if>
+            <if test="media1 != null">
+                media1 = #{media1},
+            </if>
+            <if test="media2 != null">
+                media2 = #{media2},
+            </if>
+            <if test="media3 != null">
+                media3 = #{media3},
+            </if>
+            <if test="media4 != null">
+                media4 = #{media4},
+            </if>
+            <if test="seoTitle!=null">
+                seo_title=#{seoTitle, jdbcType=VARCHAR},
+            </if>
+            <if test="seoKeywords!=null">
+                seo_keywords=#{seoKeywords, jdbcType=VARCHAR},
+            </if>
+            <if test="seoDescription!=null">
+                seo_description=#{seoDescription, jdbcType=VARCHAR},
+            </if>
+            <if test="listPageTemplate != null">
+                list_page_template = #{listPageTemplate},
+            </if>
+            <if test="detailPageTemplate != null">
+                detail_page_template = #{detailPageTemplate},
+            </if>
+        </set>
+        where id=#{id} and deleted=0
+    </update>
+    <update id="updatePageUrl">
+        update t_oneshot
+        <set>
+            <choose>
+                <when test="kind == 'list'">list_page_url = #{pageUrl}</when>
+                <otherwise>detail_page_url = #{pageUrl}</otherwise>
+            </choose>
+        </set>
+        where id = #{id}
+    </update>
+    <update id="updateSwitch">
+        update t_oneshot
+        <set>
+            <if test="fieldName=='HasManageChannel'">
+                has_manage_channel=1-has_manage_channel
+            </if>
+            <if test="fieldName=='HasFrontChannel'">
+                has_front_channel=1-has_front_channel
+            </if>
+            <if test="fieldName=='IsAddArticle'">
+                is_add_article=1-is_add_article
+            </if>
+            <if test="fieldName=='IsCanShowHidden'">
+                is_can_show_hidden=1-is_can_show_hidden
+            </if>
+            <if test="fieldName=='IsCanAddArticle'">
+                is_can_add_article=1-is_can_add_article
+            </if>
+            <if test="fieldName=='IsCanAddSub'">
+                is_can_add_sub=1-is_can_add_sub
+            </if>
+            <if test="fieldName=='IsCanEdit'">
+                is_can_edit=1-is_can_edit
+            </if>
+            <if test="fieldName=='IsCanDeleted'">
+                is_can_deleted=1-is_can_deleted
+            </if>
+            <if test="fieldName=='IsCanCascadeDeleted'">
+                is_can_cascade_deleted=1-is_can_cascade_deleted
+            </if>
+            <if test="fieldName=='IsModuleMenu'">
+                is_module_menu=1-is_module_menu
+            </if>
+            <if test="fieldName=='IsCanSort'">
+                is_can_sort=1-is_can_sort
+            </if>
+            <if test="fieldName=='IsSubMenu'">
+                is_sub_menu=1-is_sub_menu
+            </if>
+            <if test="fieldName=='IsShowCrumbs'">
+                is_show_crumbs=1-is_show_crumbs
+            </if>
+            <if test="fieldName=='IsLoop'">
+                is_loop=1-is_loop
+            </if>
+            <if test="fieldName=='WebsitePublic'">
+                website_public=1-website_public
+            </if>
+            <if test="fieldName=='IsForm'">
+                is_form=1-is_form
+            </if>
+        </set>
+        <where>
+            id=#{id} and deleted=0
+        </where>
+    </update>
+    <update id="updateSort">
+        update t_oneshot
+        <set>
+            <if test="sort!=null">
+                sort=#{sort}
+            </if>
+        </set>
+        <where>
+            id=#{id} and deleted=0
+        </where>
+    </update>
+    <update id="updateTitle">
+        update t_oneshot
+        <set>
+            <if test="className!=null">
+                class_name=#{className}
+            </if>
+        </set>
+        <where>
+            id=#{id} and deleted=0
+        </where>
+    </update>
+    <update id="updateSEO">
+        update t_oneshot
+        <set>
+            <if test="seoTitle!=null">
+                seo_title=#{seoTitle},
+            </if>
+            <if test="seoKeywords!=null">
+                seo_keywords=#{seoKeywords},
+            </if>
+            <if test="seoDescription!=null">
+                seo_description=#{seoDescription},
+            </if>
+        </set>
+        <where>
+            id=#{id} and deleted=0
+        </where>
+    </update>
+    <update id="updateEdit">
+        update t_oneshot
+        <set>
+            <if test="parentId!=null">
+                parent_id=#{parentId},
+            </if>
+            <if test="className!=null">
+                class_name=#{className},
+            </if>
+            <if test="classEnName!=null">
+                class_en_name=#{classEnName},
+            </if>
+            <if test="sort!=null">
+                sort=#{sort},
+            </if>
+            <if test="isCanDeleted!=null">
+                is_can_deleted=#{isCanDeleted},
+            </if>
+            <if test="hasManageChannel!=null">
+                has_manage_channel=#{hasManageChannel},
+            </if>
+            <if test="hasFrontChannel!=null">
+                has_front_channel=#{hasFrontChannel},
+            </if>
+            <if test="isAddArticle!=null">
+                is_add_article=#{isAddArticle},
+            </if>
+            <if test="showPosition!=null">
+                show_position=#{showPosition},
+            </if>
+            <if test="pageType!=null">
+                page_type=#{pageType},
+            </if>
+            <if test="url!=null">
+                url=#{url},
+            </if>
+            <if test="setting!=null">
+                setting=#{setting},
+            </if>
+            <if test="listPageUrl!=null">
+                list_page_url=#{listPageUrl},
+            </if>
+            <if test="listPageTemplate!=null">
+                list_page_template=#{listPageTemplate},
+            </if>
+            <if test="detailPageUrl!=null">
+                detail_page_url=#{detailPageUrl},
+            </if>
+            <if test="detailPageTemplate!=null">
+                detail_page_template=#{detailPageTemplate},
+            </if>
+            <if test="identifies!=null">
+                identifies=#{identifies},
+            </if>
+            <if test="isSubMenu!=null">
+                is_sub_menu=#{isSubMenu},
+            </if>
+        </set>
+        <where>
+            id=#{id}
+        </where>
+    </update>
+    <update id="updateAiMenuApply">
+        update t_oneshot
+        <set>
+            <if test="fields.contains('parentId')">
+                parent_id=#{patch.parentId},
+            </if>
+            <if test="fields.contains('className')">
+                class_name=#{patch.className},
+            </if>
+            <if test="fields.contains('classEnName')">
+                class_en_name=#{patch.classEnName},
+            </if>
+            <if test="fields.contains('sort')">
+                sort=#{patch.sort},
+            </if>
+            <if test="fields.contains('pageType')">
+                page_type=#{patch.pageType},
+            </if>
+            <if test="fields.contains('url')">
+                url=#{patch.url},
+            </if>
+            <if test="fields.contains('listPageUrl')">
+                list_page_url=#{patch.listPageUrl},
+            </if>
+            <if test="fields.contains('listPageTemplate')">
+                list_page_template=#{patch.listPageTemplate},
+            </if>
+            <if test="fields.contains('detailPageUrl')">
+                detail_page_url=#{patch.detailPageUrl},
+            </if>
+            <if test="fields.contains('detailPageTemplate')">
+                detail_page_template=#{patch.detailPageTemplate},
+            </if>
+            <if test="fields.contains('identifies')">
+                identifies=#{patch.identifies},
+            </if>
+        </set>
+        <where>
+            id=#{patch.id} and deleted=0
+        </where>
+    </update>
+    <update id="updateIsDeleted">
+        update t_oneshot set deleted=1
+        <where>
+            id=#{id}
+        </where>
+    </update>
+    <update id="setBusinessIdAndDomain">
+        update t_oneshot
+        set single_line8=#{businessId},
+            single_line7=#{siteDomain}
+        where id = #{menuId}
+    </update>
+    <insert id="save">
+        insert into t_oneshot (class_name, class_en_name, single_line1, single_line2, single_line3, single_line4, single_line5,
+                               single_line6, single_line7, single_line8, single_line9, single_line10, single_line11,
+                               single_line12, note1, note2, note3, note4, note5, photo1, photo2, photo3, photo4, photo5,
+                               create_time, file_down, contents, content2, seo_title, seo_keywords, seo_description)
+            value (#{className}, #{classEnName}, #{singleLine1}, #{singleLine2}, #{singleLine3}, #{singleLine4},
+            #{singleLine5}, #{singleLine6}, #{singleLine7}, #{singleLine8}, #{singleLine9}, #{singleLine10},
+            #{singleLine11}, #{singleLine12}, #{note1}, #{note2}, #{note3}, #{note4}, #{note5}, #{photo1},
+            #{photo2}, #{photo3}, #{photo4}, #{photo5}, #{CreateTime}, #{FileDown}, #{contents}, #{content2},
+            #{seoTitle,jdbcType=VARCHAR}, #{seoKeywords,jdbcType=VARCHAR}, #{seoDescription,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertMenu" useGeneratedKeys="true" keyColumn="id">
+        <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+            <!--MySql 写法-->
+            SELECT LAST_INSERT_ID()
+            <!--达梦写法-->
+--             SELECT @@IDENTITY
+        </selectKey>
+        insert into
+        t_oneshot
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="parentId!=null">
+                parent_id,
+            </if>
+            <if test="siteProjectId!=null">
+                site_project_id,
+            </if>
+            <if test="siteRootId!=null">
+                site_root_id,
+            </if>
+            <if test="className!=null">
+                class_name,
+            </if>
+            <if test="classEnName!=null">
+                class_en_name,
+            </if>
+            <if test="hasManageChannel!=null">
+                has_manage_channel,
+            </if>
+            <if test="hasFrontChannel!=null">
+                has_front_channel,
+            </if>
+            <if test="showPosition!=null">
+                show_position,
+            </if>
+            <if test="pageType!=null">
+                page_type,
+            </if>
+            <if test="url!=null">
+                url,
+            </if>
+            <if test="setting!=null">
+                setting,
+            </if>
+            <if test="listPageUrl!=null">
+                list_page_url,
+            </if>
+            <if test="listPageTemplate!=null">
+                list_page_template,
+            </if>
+            <if test="detailPageUrl!=null">
+                detail_page_url,
+            </if>
+            <if test="detailPageTemplate!=null">
+                detail_page_template,
+            </if>
+            <if test="identifies!=null">
+                identifies,
+            </if>
+            <if test="sort!=null">
+                sort,
+            </if>
+            <if test="menuField!=null">
+                menu_field,
+            </if>
+            <if test="modelField!=null">
+                model_field,
+            </if>
+            <if test="modelList!=null">
+                model_list,
+            </if>
+            <if test="modelSearch!=null">
+                model_search,
+            </if>
+            <if test="isSubMenu!=null">
+                is_sub_menu,
+            </if>
+            <if test="isCanDeleted!=null">
+                is_can_deleted,
+            </if>
+            <if test="isModuleMenu!=null">
+                is_module_menu,
+            </if>
+            <if test="isCanCascadeDeleted!=null">
+                is_can_cascade_deleted,
+            </if>
+            <if test="isCanAddSub!=null">
+                is_can_add_sub,
+            </if>
+            <if test="isCanEdit!=null">
+                is_can_edit,
+            </if>
+            <if test="isCanSort!=null">
+                is_can_sort,
+            </if>
+            <if test="isCanShowHidden!=null">
+                is_can_show_hidden,
+            </if>
+            <if test="isShowCrumbs!=null">
+                is_show_crumbs,
+            </if>
+            <if test="isLoop!=null">
+                is_loop,
+            </if>
+            <if test="websitePublic!=null">
+                website_public,
+            </if>
+            <if test="createTime!=null">
+                create_time,
+            </if>
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="parentId!=null">
+                #{parentId},
+            </if>
+            <if test="siteProjectId!=null">
+                #{siteProjectId},
+            </if>
+            <if test="siteRootId!=null">
+                #{siteRootId},
+            </if>
+            <if test="className!=null">
+                #{className},
+            </if>
+            <if test="classEnName!=null">
+                #{classEnName},
+            </if>
+            <if test="hasManageChannel!=null">
+                #{hasManageChannel},
+            </if>
+            <if test="hasFrontChannel!=null">
+                #{hasFrontChannel},
+            </if>
+            <if test="showPosition!=null">
+                #{showPosition},
+            </if>
+            <if test="pageType!=null">
+                #{pageType},
+            </if>
+            <if test="url!=null">
+                #{url},
+            </if>
+            <if test="setting!=null">
+                #{setting},
+            </if>
+            <if test="listPageUrl!=null">
+                #{listPageUrl},
+            </if>
+            <if test="listPageTemplate!=null">
+                #{listPageTemplate},
+            </if>
+            <if test="detailPageUrl!=null">
+                #{detailPageUrl},
+            </if>
+            <if test="detailPageTemplate!=null">
+                #{detailPageTemplate},
+            </if>
+            <if test="identifies!=null">
+                #{identifies},
+            </if>
+            <if test="sort!=null">
+                #{sort},
+            </if>
+            <if test="menuField!=null">
+                #{menuField},
+            </if>
+            <if test="modelField!=null">
+                #{modelField},
+            </if>
+            <if test="modelList!=null">
+                #{modelList},
+            </if>
+            <if test="modelSearch!=null">
+                #{modelSearch},
+            </if>
+            <if test="isSubMenu!=null">
+                #{isSubMenu},
+            </if>
+            <if test="isCanDeleted!=null">
+                #{isCanDeleted},
+            </if>
+            <if test="isModuleMenu!=null">
+                #{isModuleMenu},
+            </if>
+            <if test="isCanCascadeDeleted!=null">
+                #{isCanCascadeDeleted},
+            </if>
+            <if test="isCanAddSub!=null">
+                #{isCanAddSub},
+            </if>
+            <if test="isCanEdit!=null">
+                #{isCanEdit},
+            </if>
+            <if test="isCanSort!=null">
+                #{isCanSort},
+            </if>
+            <if test="isCanShowHidden!=null">
+                #{isCanShowHidden},
+            </if>
+            <if test="isShowCrumbs!=null">
+                #{isShowCrumbs},
+            </if>
+            <if test="isLoop!=null">
+                #{isLoop},
+            </if>
+            <if test="websitePublic!=null">
+                #{websitePublic},
+            </if>
+            <if test="createTime!=null">
+                #{createTime},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertSiteRootMenu" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        insert into t_oneshot
+        (site_project_id,
+         site_root_id,
+         parent_id,
+         class_name,
+         has_manage_channel,
+         has_front_channel,
+         is_sub_menu,
+         is_can_deleted,
+         is_can_add_sub,
+         is_can_edit,
+         is_can_sort,
+         is_can_show_hidden,
+         is_show_crumbs,
+         is_loop,
+         is_system,
+         deleted,
+         create_time,
+         page_type,
+         biz_code)
+        values
+        (#{siteProjectId},
+         #{siteRootId},
+         #{parentId},
+         #{className},
+         #{hasManageChannel},
+         #{hasFrontChannel},
+         #{isSubMenu},
+         #{isCanDeleted},
+         #{isCanAddSub},
+         #{isCanEdit},
+         #{isCanSort},
+         #{isCanShowHidden},
+         #{isShowCrumbs},
+         #{isLoop},
+         0,
+         0,
+         now(),
+         coalesce(#{pageType}, 0),
+         #{bizCode})
+    </insert>
+    <update id="assignBizcodeToOwnId">
+        update t_oneshot
+        set biz_code = CAST(id AS CHAR)
+        where id = #{id}
+    </update>
+    <insert id="insertPlatformColumn" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        insert into t_oneshot
+        (site_project_id,
+         site_root_id,
+         parent_id,
+         class_name,
+         sort,
+         page_type,
+         platform_source_ref,
+         has_manage_channel,
+         has_front_channel,
+         is_sub_menu,
+         is_can_add_sub,
+         is_can_deleted,
+         is_can_edit,
+         is_can_sort,
+         is_can_show_hidden,
+         is_show_crumbs,
+         is_loop,
+         is_system,
+         deleted,
+         is_deleted,
+         create_time)
+        values
+        (#{siteProjectId},
+         #{siteRootId},
+         #{parentId},
+         #{className},
+         #{sort},
+         coalesce(#{pageType}, 0),
+         #{platformSourceRef},
+         1,
+         1,
+         1,
+         coalesce(#{isCanAddSub}, 0),
+         0,
+         1,
+         1,
+         0,
+         1,
+         1,
+         0,
+         0,
+         0,
+         now())
+    </insert>
+    <update id="updatePlatformColumn">
+        update t_oneshot
+        set class_name = #{className},
+            parent_id = #{parentId},
+            sort = #{sort},
+            page_type = coalesce(#{pageType}, page_type)
+        where id = #{id}
+          and deleted = 0
+    </update>
+    <update id="updateSiteScopeByRoot">
+        with recursive menu_tree as (
+            select id
+            from t_oneshot
+            where id = #{siteRootId}
+              and deleted = 0
+            union all
+            select child.id
+            from t_oneshot child
+                     inner join menu_tree parent on child.parent_id = parent.id
+            where child.deleted = 0
+        )
+        update t_oneshot target
+               inner join menu_tree tree on target.id = tree.id
+        set target.site_project_id = #{siteProjectId},
+            target.site_root_id = #{siteRootId}
+    </update>
+    <update id="clearSiteScopeByRoot">
+        with recursive menu_tree as (
+            select id
+            from t_oneshot
+            where id = #{siteRootId}
+              and deleted = 0
+            union all
+            select child.id
+            from t_oneshot child
+                     inner join menu_tree parent on child.parent_id = parent.id
+            where child.deleted = 0
+        )
+        update t_oneshot target
+               inner join menu_tree tree on target.id = tree.id
+        set target.site_project_id = null,
+            target.site_root_id = null
+        where target.site_project_id = #{siteProjectId}
+          and target.site_root_id = #{siteRootId}
+    </update>
+    <select id="getModelById" resultType="com.xinhongru.entity.OneshotEntity">
+        select *
+        from t_oneshot
+        where id = #{id}
+          and deleted = 0
+    </select>
+    <select id="getModelByIds" resultType="com.xinhongru.entity.OneshotEntity">
+        select *
+        from t_oneshot
+        where id in
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+          and deleted = 0
+    </select>
+    <select id="selectBySiteRoot" resultType="com.xinhongru.entity.OneshotEntity">
+        select *
+        from t_oneshot
+        where site_root_id = #{siteRootId}
+          and deleted = 0
+        order by parent_id asc, sort asc, id asc
+    </select>
+
+    <select id="selectBySiteProjectId" resultType="com.xinhongru.entity.OneshotEntity">
+        select *
+        from t_oneshot
+        where site_project_id = #{siteProjectId}
+          and deleted = 0
+        order by parent_id asc, sort asc, id asc
+    </select>
+
+    <select id="getAllMenu" resultType="com.xinhongru.entity.OneshotEntity">
+        select
+        id,site_project_id,site_root_id,class_name,class_en_name,hits,sort,parent_id,page_type,has_manage_channel,has_front_channel,is_sub_menu,is_can_deleted,is_can_add_sub,is_can_edit,is_can_sort,is_show_crumbs,is_loop,setting,list_page_url,list_page_template,detail_page_url,detail_page_template,is_system,is_module_menu,is_can_cascade_deleted,is_can_show_hidden,is_add_article,is_can_add_article,is_form,biz_code
+        from t_oneshot where deleted=0
+        <include refid="orderCommon"></include>
+    </select>
+    <select id="getChildCount" resultType="java.lang.Integer">
+        select count(*)
+        from t_oneshot
+        where parent_id = #{id}
+          and deleted = 0
+    </select>
+    <select id="getAllLeftMenu" resultType="com.xinhongru.entity.OneshotEntity">
+        select
+        id,site_project_id,site_root_id,class_name,class_en_name,hits,sort,parent_id,page_type,has_manage_channel,has_front_channel,is_sub_menu,is_can_deleted,is_can_add_sub,is_can_edit,is_can_sort,is_show_crumbs,is_loop,setting,url,icon_class,list_page_url,detail_page_url,is_system
+        from t_oneshot where deleted=0 and is_sub_menu=0
+        <include refid="orderCommon"></include>
+    </select>
+    <select id="getChildMenu" resultType="com.xinhongru.entity.OneshotEntity">
+        select * from t_oneshot where parent_id=#{parentId} and is_sub_menu=1 and deleted=0
+        <include refid="orderCommon"></include>
+    </select>
+    <select id="getAllFontMenu" resultType="com.xinhongru.entity.OneshotEntity">
+        select id, parent_id, class_name
+        from t_oneshot
+        where deleted = 0
+          and is_system = 0
+          and page_type = 1
+          and LENGTH(detail_page_url) > 0
+        order by id asc
+    </select>
+    <select id="getChildCountExcludeCascade" resultType="java.lang.Integer">
+        select count(*)
+        from t_oneshot
+        where parent_id = #{id}
+          and deleted = 0
+          and is_can_cascade_deleted = 0
+    </select>
+    <select id="getAllowMenu" resultType="com.xinhongru.dto.member.MenuDTO">
+        select id, class_name, parent_id
+        from t_oneshot
+        where is_add_article = 1
+          and deleted = 0
+          and is_system = 0
+          and has_front_channel = 1
+        order by id asc
+    </select>
+    <select id="getAllFrontMenu" resultType="com.xinhongru.entity.OneshotEntity">
+        select id, class_name, parent_id, is_add_article
+        from t_oneshot
+        where is_system = 0
+          and isSystem = 0
+          and has_front_channel = 1
+          and (id in (101, 102, 103, 104, 105, 194))
+        order by id asc
+    </select>
+
+    <select id="getAllNewsMenu" resultType="com.xinhongru.entity.OneshotEntity">
+        select id,
+               class_name,
+               class_en_name,
+               hits,
+               sort,
+               parent_id,
+               page_type,
+               has_manage_channel,
+               has_front_channel,
+               is_sub_menu,
+               is_can_deleted,
+               is_can_addsub,
+               is_can_edit,
+               is_can_sort,
+               is_show_crumbs,
+               is_loop,
+               setting,
+               list_page_url,
+               is_system,
+               is_module_menu,
+               is_can_cascade_deleted,
+               is_can_show_hidden,
+               is_add_article,
+               is_can_add_article
+        from t_oneshot
+        where deleted = 0
+          and is_system = 0
+          and page_type = 1
+        order by sort asc,
+                 id asc,
+                 create_time asc
+    </select>
+    <select id="getBusinessEntityList" resultType="com.xinhongru.entity.BusinessEntity">
+        select id, title
+        from t_contents
+        where class_id = 117
+          and deleted = 0
+          and status = 1
+    </select>
+    <update id="updateStatus">
+        update t_oneshot
+        set status = #{status}
+        where id = #{id}
+    </update>
+    <update id="updateFieldConfig">
+        update t_oneshot
+        set menu_field = #{menuField, jdbcType=VARCHAR},
+            model_field = #{modelField, jdbcType=VARCHAR},
+            model_list = #{modelList, jdbcType=VARCHAR},
+            model_search = #{modelSearch, jdbcType=VARCHAR}
+        where id = #{id}
+          and deleted = 0
+    </update>
+    <update id="updateSourceMenu">
+        update t_oneshot
+        set source_site_id = #{sourceSiteId},
+            source_menu_id = #{sourceMenuId}
+        where id = #{id}
+          and deleted = 0
+    </update>
+</mapper>
