@@ -2,7 +2,7 @@ import { createRouter, createWebHistory, type RouteLocationNormalized, type Rout
 import { getActivePinia } from 'pinia';
 import axios from 'axios';
 import { AdminHttpError, httpClient, resetUnauthorizedRedirectState, setUnauthorizedSessionResetHandler } from '@/api/http';
-import { useSiteContextStore } from '@/stores/siteContext';
+import { SiteSwitchBlockedError, useSiteContextStore } from '@/stores/siteContext';
 import AiModelConfigView from '@/views/ai-config/AiModelConfigView.vue';
 import CmsContentView from '@/views/cms/CmsContentView.vue';
 import CmsContentOverview from '@/views/cms/CmsContentOverview.vue';
@@ -369,6 +369,7 @@ export async function adminRouteGuard(to: RouteLocationNormalized) {
     if (!Number.isSafeInteger(id) || id <= 0) return '/admin/v2';
     try { await siteContext.switchSite(id); }
     catch (error) {
+      if (error instanceof SiteSwitchBlockedError) return false;
       if (error instanceof AdminHttpError && !error.authorizationError && !error.authenticationError && error.status !== 404) return unavailable;
       siteContext.setMessage('无法进入指定站点，请核对站点权限。', true);
       permissionNoticePending = true;

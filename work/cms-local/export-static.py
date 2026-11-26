@@ -405,7 +405,11 @@ class Export:
         self.external = external
         self.vendor_files = {}
         self.icon_proofs = None
-        omissions = json.loads(ICON_OMISSION_CONFIG.read_text(encoding="utf-8"))
+        try:
+            omissions = json.loads(ICON_OMISSION_CONFIG.read_text(encoding="utf-8"))
+        except FileNotFoundError:
+            # 新环境没有已审核的图标省略项，按正常资源缺失规则核验。
+            omissions = {}
         self.icon_omissions = omissions.get(code, {}).get(version, {})
         self.omitted_icon_links = []
 

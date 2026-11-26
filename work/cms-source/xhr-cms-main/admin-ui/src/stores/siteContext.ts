@@ -3,6 +3,8 @@ import { http, isAuthenticationError } from '@/api/http';
 import { legacyModuleMenuItems } from '@/views/migration/cmsLegacyModules';
 import type { MenuEntity } from '@/api/systemMenus';
 
+export class SiteSwitchBlockedError extends Error {}
+
 export interface SiteSummary {
   id: number | string;
   name: string;

@@ -9,12 +9,15 @@ import org.springframework.stereotype.Service;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.UncheckedIOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -347,7 +350,7 @@ public class UiPackageStorageService {
     /** 内容提取仅列出当前站点中的 HTML/HTM/ASPX/ASP，不跟随目录链接；清单最多 500 页。 */
     public List<FileInfo> listSeedPages(String projectCode, String dbVersion) {
         requireSafeName(projectCode, "站点编码");
-        Path active = resolveReadablePath(projectCode, dbVersion);
+        Path active = resolveWorkbenchPath(projectCode, dbVersion);
         if (active == null) return List.of();
         try {
             Path siteRoot = root.resolve(projectCode).toRealPath();
@@ -392,7 +395,7 @@ public class UiPackageStorageService {
 
     private Path staticPageBase(String projectCode, String dbVersion) {
         requireSafeName(projectCode, "站点编码");
-        Path active = resolveReadablePath(projectCode, dbVersion);
+        Path active = resolveWorkbenchPath(projectCode, dbVersion);
         if (active == null) throw new IllegalArgumentException("UI 包未部署");
         try {
             Path siteRoot = root.resolve(projectCode).toRealPath();
@@ -456,7 +459,7 @@ public class UiPackageStorageService {
                 || path.indexOf(0) >= 0) {
             throw new IllegalArgumentException("资源路径无效");
         }
-        Path active = resolveReadablePath(code, version);
+        Path active = resolveWorkbenchPath(code, version);
         if (active == null) throw new IllegalArgumentException("UI 包未部署");
         try {
             Path base = active.toRealPath();
@@ -473,13 +476,63 @@ public class UiPackageStorageService {
     }
 
     Path exactInspectionRoot(String code, String version) throws IOException {
+        return findVersionDirectory(code, version)
+                .orElseThrow(() -> new IllegalArgumentException("页面包版本不存在"));
+    }
+
+    private Optional<Path> findVersionDirectory(String code, String version) throws IOException {
         requireSafeName(code, "站点编码");
         requireSafeName(version, "版本标识");
-        Path expected = root.toRealPath().resolve(code).resolve(version);
-        if (!Files.isDirectory(expected, LinkOption.NOFOLLOW_LINKS)
-                || !expected.equals(expected.toRealPath()))
-            throw new IllegalArgumentException("页面包版本不存在或路径无效");
-        return expected;
+        Path site = root.toRealPath().resolve(code);
+        Path expected = site.resolve(version);
+        try {
+            requireVersionDirectory(site);
+            requireVersionDirectory(expected);
+            return Optional.of(expected);
+        } catch (NoSuchFileException missing) {
+            return Optional.empty();
+        }
+    }
+
+    private static void requireVersionDirectory(Path directory) throws IOException {
+        BasicFileAttributes attributes =
+                Files.readAttributes(directory, BasicFileAttributes.class, LinkOption.NOFOLLOW_LINKS);
+        if (!attributes.isDirectory() || !directory.equals(directory.toRealPath())) {
+            throw new IOException("页面包目录无效");
+        }
+    }
+
+    /** 工作台证据跟随登记版本；仅无版本的旧记录沿用站点 active。 */
+    private Path resolveWorkbenchPath(String code, String version) {
+        if (version == null || version.isBlank()) {
+            return resolveReadablePath(code, version);
+        }
+        try {
+            return findVersionDirectory(code, version).orElse(null);
+        } catch (IOException e) {
+            throw new IllegalStateException("无法读取页面包目录", e);
+        }
+    }
+
+    boolean hasDeployedVersion(String code, String version) {
+        if (version == null || version.isBlank()) {
+            return false;
+        }
+        try {
+            var directory = findVersionDirectory(code, version);
+            if (directory.isEmpty()) {
+                return false;
+            }
+            try (var files =
+                    Files.find(
+                            directory.get(),
+                            Integer.MAX_VALUE,
+                            (path, attributes) -> attributes.isRegularFile())) {
+                return files.findAny().isPresent();
+            }
+        } catch (IOException | UncheckedIOException | IllegalArgumentException e) {
+            throw new IllegalStateException("无法读取页面包目录", e);
+        }
     }
 
     /** 隔离预览读取既有当前站点/全局素材，不通过HTTP访问。 */
@@ -525,7 +578,7 @@ public class UiPackageStorageService {
 
     public List<InspectionFile> inspectionFiles(String code, String version) {
         requireSafeName(code, "站点编码");
-        Path active = resolveReadablePath(code, version);
+        Path active = resolveWorkbenchPath(code, version);
         if (active == null) return List.of();
         try {
             Path base = active.toRealPath();

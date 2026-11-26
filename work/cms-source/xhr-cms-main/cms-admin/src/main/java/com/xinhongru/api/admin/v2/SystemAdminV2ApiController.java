@@ -32,6 +32,7 @@ import com.xinhongru.service.oneshot.OneShotService;
 import com.xinhongru.service.option.OptionService;
 import com.xinhongru.service.user.UserService;
 import com.xinhongru.service.userGroup.UserGroupService;
+import com.xinhongru.site.context.SiteAccessDeniedException;
 import com.xinhongru.site.context.SiteContextService;
 import com.xinhongru.utils.RequestOriginUtils;
 
@@ -1207,6 +1208,13 @@ public class SystemAdminV2ApiController {
     private String unsupportedBrandingMediaMessage(String label, String formats) {
         String prefix = "背景".equals(label) ? "背景" : label + " ";
         return prefix + "文件格式不支持，仅支持 " + formats;
+    }
+
+    @ExceptionHandler(SiteAccessDeniedException.class)
+    public ResponseEntity<AdminApiResponse<Void>> handleSiteAccessDenied(
+            SiteAccessDeniedException exception) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(new AdminApiResponse<>(403, exception.getMessage(), null));
     }
 
     @ExceptionHandler(IllegalArgumentException.class)

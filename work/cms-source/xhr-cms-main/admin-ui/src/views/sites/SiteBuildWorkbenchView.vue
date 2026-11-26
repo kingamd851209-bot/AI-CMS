@@ -506,7 +506,7 @@ import PublicBindingApplicationPanel from '@/components/template-recognition/Pub
 import { pageAnalysisTasksApi, type PageAnalysisTask } from '@/api/pageAnalysisTasks';
 import { useRoute, useRouter, onBeforeRouteLeave } from 'vue-router';
 import { ElMessage, ElMessageBox, type UploadFile } from 'element-plus';
-import { useSiteContextStore } from '@/stores/siteContext';
+import { SiteSwitchBlockedError, useSiteContextStore } from '@/stores/siteContext';
 import { AdminHttpError, http } from '@/api/http';
 import DomainAgentPanel from '@/components/sites/DomainAgentPanel.vue';
 import type { RecognitionSuggestion } from '@/api/domainAgent';
@@ -2977,7 +2977,7 @@ watch(()=>[fieldPlan.value?.id,planStale.value,busy.value],async()=>{await nextT
 
 const stopSiteSwitchGuard=siteContext.$onAction(({name,args})=>{
   if(name!=='switchSite'||String(args[0])===String(siteContext.currentSite?.id))return;
-  if(releasePanel.value?.isSaving()){const message='请等待签收回执保存结果后切换站点。';ElMessage.warning(message);throw new Error(message);}
+  if(releasePanel.value?.isSaving()){const message='请等待签收回执保存结果后切换站点。';ElMessage.warning(message);throw new SiteSwitchBlockedError(message);}
   if(applicationBusy.value){const message='正在应用栏目与字段，请等待结果后切换站点。';ElMessage.warning(message);throw new Error(message);}
   if(publicBindingBusy.value||workbenchPublishBusy.value||homeBannerBusy.value||navigationLandingBusy.value||navigationLinksBusy.value||sharedContentBusy.value){const message='请等待当前模板或发布操作返回，再切换站点。';ElMessage.warning(message);throw new Error(message);}
   if(siteModelPanel.value?.isWriting()){const message='整站结构正在写入栏目或内容草稿，请等到结果返回后切换站点。';ElMessage.warning(message);throw new Error(message);}
@@ -2986,7 +2986,7 @@ const stopSiteSwitchGuard=siteContext.$onAction(({name,args})=>{
   }
   if(approvedSiteSwitch){approvedSiteSwitch=false;return;}
   if(releasePanel.value?.hasUnsavedChanges() && !window.confirm('切换站点会放弃未保存的交互回执。继续切换站点吗？')){
-    throw new Error('已留在原站点，签收回执仍可继续编辑。');
+    throw new SiteSwitchBlockedError('已留在原站点，签收回执仍可继续编辑。');
   }
   if(checklistPanel.value?.hasUnsavedChanges()){
     const message='待办中的入口职责尚未保存，请先保存或从待办编辑窗口确认放弃。';ElMessage.warning(message);throw new Error(message);

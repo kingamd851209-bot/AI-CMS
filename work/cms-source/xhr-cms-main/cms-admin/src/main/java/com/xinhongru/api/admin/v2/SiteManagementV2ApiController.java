@@ -137,14 +137,18 @@ public class SiteManagementV2ApiController {
                 snapshot.canAccessAllSites()
                         ? projectService.listSites()
                         : projectService.listSites(snapshot.accessibleSiteIds());
-        return AdminApiResponse.success(sites.stream().map(SiteManagementView::from).toList());
+        return AdminApiResponse.success(sites.stream().map(this::siteWithPackageStatus).toList());
     }
 
     @GetMapping("/{siteId}")
     public AdminApiResponse<SiteManagementView> site(
             HttpServletRequest request, @PathVariable Long siteId) {
         siteContextService.assertCanAccessSite(request, siteId);
-        return AdminApiResponse.success(SiteManagementView.from(projectService.getSite(siteId)));
+        return AdminApiResponse.success(siteWithPackageStatus(projectService.getSite(siteId)));
+    }
+
+    private SiteManagementView siteWithPackageStatus(SiteProjectEntity site) {
+        return SiteManagementView.from(site, uiPackageService().resolvePackageStatus(site));
     }
 
     @GetMapping("/{siteId}/locales")
@@ -1055,6 +1059,12 @@ public class SiteManagementV2ApiController {
             String siteServiceIp,
             Integer siteServicePort) {
         static SiteManagementView from(SiteProjectEntity site) {
+            return from(
+                    site,
+                    site.getUiPackageStatus() == null ? "NOT_UPLOADED" : site.getUiPackageStatus());
+        }
+
+        static SiteManagementView from(SiteProjectEntity site, String uiPackageStatus) {
             return new SiteManagementView(
                     site.getId(),
                     site.getParentId(),
@@ -1074,7 +1084,7 @@ public class SiteManagementV2ApiController {
                             : site.getSiteMode(),
                     site.getSiteDescription(),
                     site.getDefaultLanguage(),
-                    site.getUiPackageStatus() == null ? "NOT_UPLOADED" : site.getUiPackageStatus(),
+                    uiPackageStatus,
                     site.getCreateTime(),
                     site.getSiteServiceIp(),
                     site.getSiteServicePort());

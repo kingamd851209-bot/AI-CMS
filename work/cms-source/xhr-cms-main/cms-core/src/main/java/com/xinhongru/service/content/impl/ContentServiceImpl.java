@@ -31,6 +31,7 @@ import com.xinhongru.service.content.ContentService;
 import com.xinhongru.service.member.impl.MemberCredentials;
 import com.xinhongru.service.logOperation.LogOperationService;
 import com.xinhongru.site.content.ContentLinkService;
+import com.xinhongru.site.context.SiteContextService;
 import com.xinhongru.site.locale.SiteLocaleService;
 import com.xinhongru.site.render.StaticRenderProof;
 import com.xinhongru.site.storage.SiteStoragePathResolver;
@@ -81,6 +82,7 @@ public class ContentServiceImpl implements ContentService {
     private SiteStoragePathResolver siteStoragePathResolver;
     private TransactionTemplate withdrawalRecovery;
     @Autowired private SiteLocaleService siteLocaleService;
+    @Autowired private SiteContextService siteContextService;
     @Autowired private SiteWorkbenchContextService workbenchContext;
 
     @Autowired
@@ -709,9 +711,12 @@ public class ContentServiceImpl implements ContentService {
         if (!hasContentPermission(httpServletRequest, classid, WebConst.DELETE_AUTHORITY_ID)) {
             return ResultVO.fail(ErrorCodeEnum.UNAUTHORIZED_OPERATION);
         }
-        OneshotEntity menu = lockContentModel(classid);
-        ContentEntity modelById = menu == null ? null
-                : contentDao.lockActiveArticleInSiteMenu(menu.getSiteProjectId(), classid, idDto.getId());
+        OneshotEntity menu = lockWithdrawalMenu(httpServletRequest, classid);
+        if (menu == null) {
+            return ResultVO.fail(ErrorCodeEnum.UNAUTHORIZED_OPERATION);
+        }
+        ContentEntity modelById =
+                contentDao.lockActiveArticleInSiteMenu(menu.getSiteProjectId(), classid, idDto.getId());
         if (modelById == null) {
             return ResultVO.fail(ErrorCodeEnum.DATA_NOT_FOUND);
         }
@@ -744,6 +749,11 @@ public class ContentServiceImpl implements ContentService {
     }
 
     /** 与字段配置保存共用栏目锁；所有正文写遵循栏目锁、内容锁的顺序。 */
+    private OneshotEntity lockWithdrawalMenu(HttpServletRequest request, Integer menuId) {
+        long siteId = siteContextService.requireCurrentSiteId(request);
+        return oneShotMapper.lockFieldConfiguration(siteId, menuId.longValue());
+    }
+
     private OneshotEntity lockContentModel(Integer menuId) {
         if (menuId == null) return null;
         OneshotEntity located = oneShotMapper.getModelById(menuId);
@@ -799,22 +809,15 @@ public class ContentServiceImpl implements ContentService {
             return ResultVO.fail(ErrorCodeEnum.UNAUTHORIZED_OPERATION);
         }
 
-        // 如果是批量删除 检查是否存在关联数据
-        if (optionDto.getOptionType().equals(27)) {
-            // 检查是否存在关联数据
-            Integer countRelationData = contentDao.getBatchChildCount(optionDto.getIds());
-            if (countRelationData > 0) {
-                return ResultVO.fail(ErrorCodeEnum.HAS_RELATION_DATA);
-            }
-        }
-
         int optionType = optionDto.getOptionType();
         List<Integer> ids = optionDto.getIds();
         List<ContentEntity> removedDetails = List.of();
         OneshotEntity menu = null;
         if (optionType == 26 || optionType == 27) {
-            menu = lockContentModel(classid);
-            if (menu == null) return ResultVO.fail(ErrorCodeEnum.SAVE_FAIL);
+            menu = lockWithdrawalMenu(httpServletRequest, classid);
+            if (menu == null) {
+                return ResultVO.fail(ErrorCodeEnum.UNAUTHORIZED_OPERATION);
+            }
             var siteId = menu.getSiteProjectId();
             removedDetails = ids.stream().distinct().sorted()
                     .map(id -> contentDao.lockActiveArticleInSiteMenu(siteId, classid, id))
@@ -823,6 +826,9 @@ public class ContentServiceImpl implements ContentService {
                     .toList();
             ids = removedDetails.stream().map(ContentEntity::getId).toList();
             if (ids.isEmpty()) return ResultVO.fail(ErrorCodeEnum.SAVE_FAIL);
+            if (optionType == 27 && contentDao.getBatchChildCount(ids) > 0) {
+                return ResultVO.fail(ErrorCodeEnum.HAS_RELATION_DATA);
+            }
         }
         Integer count =
                 contentDao.updateElite(

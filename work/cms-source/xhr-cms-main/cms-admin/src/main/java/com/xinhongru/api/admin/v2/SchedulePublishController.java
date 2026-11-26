@@ -8,6 +8,8 @@ import com.xinhongru.service.cmsPlatform.SchedulePublishService;
 import com.xinhongru.site.context.SiteContextService;
 import com.xinhongru.site.context.SiteAccessDeniedException;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -85,6 +87,13 @@ public class SchedulePublishController {
             throw new SiteAccessDeniedException("请选择任务所属站点");
         }
         return current;
+    }
+
+    @ExceptionHandler(SiteAccessDeniedException.class)
+    public ResponseEntity<AdminApiResponse<Void>> handleSiteAccessDenied(
+            SiteAccessDeniedException exception) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(new AdminApiResponse<>(403, exception.getMessage(), null));
     }
 
     @GetMapping("/validate")

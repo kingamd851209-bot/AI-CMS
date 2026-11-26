@@ -48,6 +48,7 @@ import com.xinhongru.service.content.ContentService;
 import com.xinhongru.service.fieldsetting.FieldSettingService;
 import com.xinhongru.service.oneshot.OneShotService;
 import com.xinhongru.site.context.CmsResourceContextService;
+import com.xinhongru.site.context.SiteAccessDeniedException;
 import com.xinhongru.site.context.SiteContext;
 import com.xinhongru.site.context.SiteContextService;
 import com.xinhongru.site.context.SiteResourceGuard;
@@ -1638,6 +1639,7 @@ public class CmsCoreV2ApiController {
             @PathVariable Integer classId,
             @RequestBody BatchIdsRequest body) {
         validateBatchIds(body == null ? null : body.ids());
+        requireCurrentSiteMenu(request, classId);
         requireManageableContentMenu(request, classId);
         requireCmsOperation(request, classId, WebConst.DELETE_AUTHORITY_ID);
 
@@ -1757,11 +1759,19 @@ public class CmsCoreV2ApiController {
     @DeleteMapping("/content/{classId}/{id}")
     public AdminApiResponse<Void> deleteContent(
             HttpServletRequest request, @PathVariable Integer classId, @PathVariable Integer id) {
+        requireCurrentSiteMenu(request, classId);
         requireManageableContentMenu(request, classId);
         requireCmsOperation(request, classId, WebConst.DELETE_AUTHORITY_ID);
         requireContentInMenu(classId, id);
         requireSuccess(contentService.deleteInfoById(classId, new IdDto(id), request));
         return AdminApiResponse.success();
+    }
+
+    @ExceptionHandler(SiteAccessDeniedException.class)
+    public ResponseEntity<AdminApiResponse<Void>> handleSiteAccessDenied(
+            SiteAccessDeniedException exception) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(new AdminApiResponse<>(403, exception.getMessage(), null));
     }
 
     @ExceptionHandler(IllegalArgumentException.class)

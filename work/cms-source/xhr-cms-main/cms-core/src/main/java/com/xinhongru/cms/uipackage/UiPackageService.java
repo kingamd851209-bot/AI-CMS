@@ -114,7 +114,10 @@ public class UiPackageService {
             throw new IllegalStateException("UIPackage 升级失败: " + e.getMessage(), e);
         }
 
-        site.setUiPackageName(filename).setUpdateTime(LocalDateTime.now());
+        String status = statusAfterUpload(site.getUiPackageStatus());
+        site.setUiPackageName(filename)
+                .setUiPackageStatus(status)
+                .setUpdateTime(LocalDateTime.now());
         projectMapper.updateById(site);
 
         recordUpload(
@@ -126,7 +129,6 @@ public class UiPackageService {
                 uploadUserId,
                 uploadUser);
 
-        String status = site.getUiPackageStatus() == null ? "UPLOADED" : site.getUiPackageStatus();
         String accessUrl =
                 "RUNNING".equals(status)
                         ? httpServer.getAccessUrl(site.getProjectCode(), site.getSiteServiceIp())
@@ -166,8 +168,10 @@ public class UiPackageService {
             throw new IllegalStateException("UIPackage 重新上传失败: " + e.getMessage(), e);
         }
 
+        String status = statusAfterUpload(site.getUiPackageStatus());
         site.setUiPackageName(filename)
                 .setUiPackageVersion(version)
+                .setUiPackageStatus(status)
                 .setUpdateTime(LocalDateTime.now());
         projectMapper.updateById(site);
 
@@ -180,12 +184,15 @@ public class UiPackageService {
                 uploadUserId,
                 uploadUser);
 
-        String status = site.getUiPackageStatus() == null ? "UPLOADED" : site.getUiPackageStatus();
         String accessUrl =
                 "RUNNING".equals(status)
                         ? httpServer.getAccessUrl(site.getProjectCode(), site.getSiteServiceIp())
                         : null;
         return new UiPackageStatusView(status, filename, version, accessUrl);
+    }
+
+    private static String statusAfterUpload(String status) {
+        return status == null || "NOT_UPLOADED".equals(status) ? "UPLOADED" : status;
     }
 
     /**
@@ -409,6 +416,7 @@ public class UiPackageService {
 
     public UiPackageStatusView setPort(Long siteId, int port) {
         SiteProjectEntity site = requireSite(siteId);
+        String status = resolvePackageStatus(site);
         try {
             httpServer.setPort(port);
         } catch (IllegalArgumentException e) {
@@ -416,8 +424,6 @@ public class UiPackageService {
         } catch (Exception e) {
             throw new IllegalStateException("端口设置失败: " + e.getMessage(), e);
         }
-        String status =
-                site.getUiPackageStatus() == null ? "NOT_UPLOADED" : site.getUiPackageStatus();
         if ("RUNNING".equals(status)) {
             String accessUrl =
                     httpServer.getAccessUrl(site.getProjectCode(), site.getSiteServiceIp());
@@ -428,10 +434,20 @@ public class UiPackageService {
                 status, site.getUiPackageName(), site.getUiPackageVersion(), null);
     }
 
-    public UiPackageStatusView getUiPackageStatus(Long siteId) {
-        SiteProjectEntity site = requireSite(siteId);
+    public String resolvePackageStatus(SiteProjectEntity site) {
         String status =
                 site.getUiPackageStatus() == null ? "NOT_UPLOADED" : site.getUiPackageStatus();
+        if ("NOT_UPLOADED".equals(status)
+                && storageService.hasDeployedVersion(
+                        site.getProjectCode(), site.getUiPackageVersion())) {
+            return "UPLOADED";
+        }
+        return status;
+    }
+
+    public UiPackageStatusView getUiPackageStatus(Long siteId) {
+        SiteProjectEntity site = requireSite(siteId);
+        String status = resolvePackageStatus(site);
 
         // 如果数据库状态是 RUNNING 但内存中没有，尝试自动重新激活
         if ("RUNNING".equals(status)) {
